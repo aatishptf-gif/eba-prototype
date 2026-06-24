@@ -42,7 +42,7 @@
   .help-link svg{width:17px;height:17px}
 
   /* Layout */
-  main{flex:1;display:flex;align-items:center;justify-content:center;padding:clamp(24px,5vw,56px) clamp(16px,4vw,40px);}
+  main{flex:1;display:flex;align-items:center;justify-content:center;}
   .auth-wrap{width:100%;max-width:1040px;display:grid;grid-template-columns:1.05fr .95fr;gap:0;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-deep);overflow:hidden;animation:fade .5s var(--ease)}
   @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 
@@ -65,11 +65,10 @@
   .fp-head h1{font-family:"Satoshi","Inter",sans-serif;font-size:1.7rem;font-weight:600;color:var(--primary)}
   .fp-head p{color:var(--muted);font-size:.9rem;margin-top:7px}
 
-  .tabs{display:flex;gap:6px;background:var(--bg-tint);border:1px solid var(--line);border-radius:13px;padding:5px;margin:26px 0 22px}
-  .tab{flex:1;border:none;cursor:pointer;font-family:inherit;font-size:.9rem;font-weight:600;color:var(--muted);padding:11px 10px;border-radius:9px;background:transparent;transition:.22s var(--ease)}
-  .tab:hover{color:var(--primary)}
-  .tab.active{background:linear-gradient(180deg,var(--primary-3),var(--primary));color:#fff;box-shadow:0 8px 18px -10px rgba(15,23,42,.6)}
-  .tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .switch-line{text-align:center;margin-top:18px;font-size:.88rem;color:var(--muted)}
+  .switch-line a{color:var(--accent);font-weight:600;cursor:pointer;text-decoration:none}
+  .switch-line a:hover{text-decoration:underline}
+  .switch-line a:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
 
   .field{margin-bottom:18px}
   .field label{display:block;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px}
@@ -89,7 +88,7 @@
   .field-msg.show{display:flex}
   .field-msg svg{width:14px;height:14px;flex:none}
 
-  .row-between{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:-2px 0 20px}
+  .row-between{display:flex;align-items:center;justify-content:end;flex-wrap:wrap;gap:10px;margin:-2px 0 20px}
   .remember{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:.85rem;color:var(--muted)}
   .remember input{position:absolute;opacity:0;width:0;height:0}
   .check{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;transition:.18s;flex:none}
@@ -152,7 +151,7 @@
 </head>
 <body>
 
-<header>
+<!-- <header>
   <div class="header-inner">
     <div class="brand">
       <div class="seal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#D5E1EF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M7 21h10"/><path d="M5 7h14"/><path d="M9 4.5 5 7 1.5 7"/><path d="M5 7 2 13a3 3 0 0 0 6 0L5 7Z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0l-3-6Z"/><circle cx="12" cy="4" r="1.4" fill="#D5E1EF" stroke="none"/></svg></div>
@@ -160,7 +159,7 @@
     </div>
     <a class="help-link" href="#" onclick="toast('Contact the association office for help');return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Need help?</a>
   </div>
-</header>
+</header> -->
 
 <main>
   <div class="auth-wrap">
@@ -182,20 +181,17 @@
     <section class="form-panel">
       <div class="fp-head">
         <h1>Member Login</h1>
-        <!-- <p>Welcome back. Sign in to your EBA account.</p> -->
+        <p>Sign in to your EBA account.</p>
       </div>
 
-      <div class="tabs" role="tablist">
-        <button class="tab active" id="tab-pw" role="tab" aria-selected="true" onclick="switchMode('password')">Password</button>
-        <button class="tab" id="tab-otp" role="tab" aria-selected="false" onclick="switchMode('otp')">OTP</button>
-      </div>
+      <div style="height:22px"></div>
 
       <!-- Phone (shared) -->
       <div class="field">
-        <label for="phone">Phone Number</label>
+        <!-- <label for="phone">Phone Number</label> -->
         <div class="phone-group">
           <span class="phone-prefix">+91</span>
-          <input class="inp" id="phone" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" autocomplete="tel" oninput="onPhoneInput(this)" />
+          <input class="inp" id="phone" type="tel" inputmode="numeric" maxlength="10" placeholder="Phone number" autocomplete="tel" oninput="onPhoneInput(this)" />
         </div>
         <div class="field-msg" id="phoneMsg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>Enter a valid 10-digit mobile number.</span></div>
       </div>
@@ -203,17 +199,18 @@
       <!-- PASSWORD MODE -->
       <div id="mode-password">
         <div class="field">
-          <label for="password">Password</label>
+          <!-- <label for="password">Password</label> -->
           <div class="pw-group">
-            <input class="inp" id="password" type="password" placeholder="Enter your password" autocomplete="current-password" />
+            <input class="inp" id="password" type="password" placeholder="Password" autocomplete="current-password" />
             <button class="pw-toggle" type="button" aria-label="Show password" onclick="togglePw('password',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.2A9.5 9.5 0 0 1 12 4c6.5 0 10 7 10 7a13.2 13.2 0 0 1-2.2 3"/><path d="M6.6 6.6A13.4 13.4 0 0 0 2 11s3.5 7 10 7a9.3 9.3 0 0 0 4.4-1.1"/><path d="M3 3l18 18"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button>
           </div>
         </div>
         <div class="row-between">
-          <label class="remember"><input type="checkbox" id="remember" /><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Remember me</label>
+          <!-- <label class="remember"><input type="checkbox" id="remember" /><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Remember me</label> -->
           <a class="link" onclick="toast('A reset link will be sent to your registered number')">Forgot password?</a>
         </div>
         <button class="btn-primary" onclick="loginPassword()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5M15 12H3"/></svg>Sign In</button>
+        <div class="switch-line">Prefer a one-time code? <a onclick="switchMode('otp')">Login with OTP</a></div>
       </div>
 
       <!-- OTP MODE -->
@@ -221,6 +218,7 @@
         <!-- request stage -->
         <div id="otp-request">
           <button class="btn-primary" onclick="sendLoginOtp()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>Send OTP</button>
+          <div class="switch-line">Have your password? <a onclick="switchMode('password')">Login with password</a></div>
         </div>
         <!-- verify stage -->
         <div class="otp-stage" id="otp-verify">
@@ -260,10 +258,6 @@
   let mode='password';
   function switchMode(m){
     mode=m;
-    document.getElementById('tab-pw').classList.toggle('active',m==='password');
-    document.getElementById('tab-otp').classList.toggle('active',m==='otp');
-    document.getElementById('tab-pw').setAttribute('aria-selected',m==='password');
-    document.getElementById('tab-otp').setAttribute('aria-selected',m==='otp');
     document.getElementById('mode-password').style.display=m==='password'?'block':'none';
     document.getElementById('mode-otp').style.display=m==='otp'?'block':'none';
     if(m==='password') resetLoginOtp();
