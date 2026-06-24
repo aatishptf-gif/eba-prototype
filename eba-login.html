@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ernakulam Bar Association · Member Login</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900,1&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#EEF3FA;--bg-tint:#F6F9FD;--card:#FFFFFF;
+    --primary:#0F172A;--primary-2:#1E293B;--primary-3:#334155;
+    --light:#D5E1EF;--light-soft:#E8EFF7;
+    --accent:#3E6CA8;--accent-bright:#5B86C4;
+    --ink:#0F172A;--muted:#52617C;--muted-2:#8593AC;
+    --line:rgba(15,23,42,.10);--aline:rgba(62,108,168,.32);
+    --red:#DC4C4C;--green:#3F9A5A;--amber:#D08A2E;
+    --shadow:0 1px 2px rgba(15,23,42,.06), 0 12px 32px -12px rgba(15,23,42,.20);
+    --shadow-deep:0 1px 2px rgba(15,23,42,.1), 0 16px 38px -16px rgba(15,23,42,.45);
+    --radius:18px;--ease:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:"Inter",system-ui,sans-serif;
+    background:radial-gradient(1100px 560px at 88% -8%, rgba(91,134,196,.16), transparent 58%),radial-gradient(900px 520px at 0% 108%, rgba(15,23,42,.06), transparent 55%),var(--bg);
+    color:var(--ink);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;
+    display:flex;flex-direction:column;}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#1E293B 0%, var(--primary) 100%);border-bottom:1px solid var(--aline);box-shadow:0 10px 30px -18px rgba(15,23,42,.6);}
+  .header-inner{max-width:1240px;margin:0 auto;width:100%;padding:14px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  .brand{display:flex;align-items:center;gap:14px;min-width:0;}
+  .seal{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%, #28344A, #0a0f1e);border:1.5px solid var(--accent-bright);box-shadow:0 0 0 3px rgba(91,134,196,.16);}
+  .seal svg{width:26px;height:26px}
+  .wordmark .name{font-family:"Satoshi","Inter",sans-serif;font-weight:600;letter-spacing:.10em;color:#fff;font-size:1.3rem;line-height:1;}
+  .wordmark .sub{color:var(--light);font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .help-link{display:inline-flex;align-items:center;gap:8px;color:#dbe5f3;font-size:.86rem;font-weight:500;text-decoration:none;padding:9px 14px;border-radius:11px;background:rgba(255,255,255,.08);transition:.25s var(--ease)}
+  .help-link:hover{background:rgba(91,134,196,.26);color:#fff}
+  .help-link svg{width:17px;height:17px}
+
+  /* Layout */
+  main{flex:1;display:flex;align-items:center;justify-content:center;padding:clamp(24px,5vw,56px) clamp(16px,4vw,40px);}
+  .auth-wrap{width:100%;max-width:1040px;display:grid;grid-template-columns:1.05fr .95fr;gap:0;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-deep);overflow:hidden;animation:fade .5s var(--ease)}
+  @keyframes fade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  /* Brand panel */
+  .brand-panel{position:relative;padding:46px 42px;color:#fff;background:radial-gradient(130% 120% at 90% -10%, rgba(91,134,196,.30), transparent 55%),linear-gradient(160deg,#1E293B,#0F172A);display:flex;flex-direction:column;justify-content:space-between;gap:40px;overflow:hidden}
+  .brand-panel::after{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(213,225,239,.07) 1px, transparent 1px);background-size:20px 20px;opacity:.5;pointer-events:none}
+  .bp-seal{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%, #28344A, #0a0f1e);border:1.5px solid var(--accent-bright);box-shadow:0 0 0 4px rgba(91,134,196,.16);position:relative;z-index:1}
+  .bp-seal svg{width:34px;height:34px}
+  .bp-copy{position:relative;z-index:1}
+  .bp-copy h2{font-family:"Satoshi","Inter",sans-serif;font-size:2rem;font-weight:600;line-height:1.16;letter-spacing:.01em}
+  .bp-copy h2 .em{color:var(--accent-bright);font-style:italic}
+  .bp-copy p{color:var(--light);font-size:.92rem;margin-top:14px;max-width:34ch;line-height:1.55}
+  .bp-points{position:relative;z-index:1;display:flex;flex-direction:column;gap:14px}
+  .bp-point{display:flex;align-items:center;gap:12px;font-size:.9rem;color:#e8eff8}
+  .bp-point .bpi{width:34px;height:34px;border-radius:10px;flex:none;display:grid;place-items:center;background:rgba(213,225,239,.14);border:1px solid var(--aline)}
+  .bp-point .bpi svg{width:17px;height:17px;color:var(--light)}
+
+  /* Form panel */
+  .form-panel{padding:46px clamp(28px,4vw,46px)}
+  .fp-head h1{font-family:"Satoshi","Inter",sans-serif;font-size:1.7rem;font-weight:600;color:var(--primary)}
+  .fp-head p{color:var(--muted);font-size:.9rem;margin-top:7px}
+
+  .tabs{display:flex;gap:6px;background:var(--bg-tint);border:1px solid var(--line);border-radius:13px;padding:5px;margin:26px 0 22px}
+  .tab{flex:1;border:none;cursor:pointer;font-family:inherit;font-size:.9rem;font-weight:600;color:var(--muted);padding:11px 10px;border-radius:9px;background:transparent;transition:.22s var(--ease)}
+  .tab:hover{color:var(--primary)}
+  .tab.active{background:linear-gradient(180deg,var(--primary-3),var(--primary));color:#fff;box-shadow:0 8px 18px -10px rgba(15,23,42,.6)}
+  .tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .field{margin-bottom:18px}
+  .field label{display:block;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:7px}
+  .inp{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:11px;background:var(--bg-tint);font-family:inherit;font-size:.95rem;color:var(--ink);transition:.2s var(--ease)}
+  .inp::placeholder{color:var(--muted-2)}
+  .inp:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px rgba(62,108,168,.15)}
+  .inp.err{border-color:var(--red);box-shadow:0 0 0 4px rgba(220,76,76,.14)}
+  .phone-group{display:flex;align-items:stretch}
+  .phone-prefix{flex:none;display:flex;align-items:center;gap:7px;padding:0 14px;border:1px solid var(--line);border-right:none;border-radius:11px 0 0 11px;background:#fff;color:var(--ink);font-weight:600;font-size:.95rem}
+  .phone-prefix svg{width:18px;height:18px}
+  .phone-group .inp{border-radius:0 11px 11px 0}
+  .pw-group{position:relative}
+  .pw-toggle{position:absolute;right:8px;top:50%;transform:translateY(-50%);border:none;background:none;cursor:pointer;color:var(--muted-2);padding:7px;border-radius:8px;display:grid;place-items:center;transition:.18s}
+  .pw-toggle:hover{color:var(--accent);background:rgba(62,108,168,.08)}
+  .pw-toggle svg{width:19px;height:19px}
+  .field-msg{font-size:.78rem;color:var(--red);margin-top:6px;display:none;align-items:center;gap:6px}
+  .field-msg.show{display:flex}
+  .field-msg svg{width:14px;height:14px;flex:none}
+
+  .row-between{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin:-2px 0 20px}
+  .remember{display:flex;align-items:center;gap:9px;cursor:pointer;font-size:.85rem;color:var(--muted)}
+  .remember input{position:absolute;opacity:0;width:0;height:0}
+  .check{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--line);background:#fff;display:grid;place-items:center;transition:.18s;flex:none}
+  .check svg{width:12px;height:12px;color:#fff;opacity:0;transition:.18s}
+  .remember input:checked + .check{background:var(--accent);border-color:var(--accent)}
+  .remember input:checked + .check svg{opacity:1}
+  .remember input:focus-visible + .check{outline:2px solid var(--accent);outline-offset:2px}
+  .link{color:var(--accent);font-size:.85rem;font-weight:600;text-decoration:none;cursor:pointer}
+  .link:hover{text-decoration:underline}
+
+  .btn-primary{width:100%;border:none;cursor:pointer;padding:15px 18px;border-radius:12px;font-family:"Inter",sans-serif;font-weight:600;font-size:.95rem;color:#fff;background:linear-gradient(180deg,var(--primary-3),var(--primary));display:flex;align-items:center;justify-content:center;gap:9px;transition:.25s var(--ease);box-shadow:0 8px 22px -10px rgba(15,23,42,.65);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(15,23,42,.8)}
+  .btn-primary:active{transform:translateY(0)}
+  .btn-primary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn-primary:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+  .btn-primary svg{width:18px;height:18px;color:var(--light)}
+  .btn-ghost{width:100%;border:1px solid var(--line);cursor:pointer;padding:13px 18px;border-radius:12px;font-family:inherit;font-weight:600;font-size:.92rem;color:var(--primary);background:#fff;display:flex;align-items:center;justify-content:center;gap:9px;transition:.25s var(--ease)}
+  .btn-ghost:hover{border-color:var(--aline);background:var(--bg-tint)}
+  .btn-ghost:disabled{opacity:.5;cursor:not-allowed}
+  .btn-ghost svg{width:17px;height:17px;color:var(--accent)}
+
+  /* OTP */
+  .otp-stage{display:none}
+  .otp-stage.show{display:block;animation:fade .35s var(--ease)}
+  .otp-sent{font-size:.85rem;color:var(--muted);margin-bottom:16px;line-height:1.5}
+  .otp-sent b{color:var(--ink)}
+  .otp-boxes{display:flex;gap:10px;margin-bottom:8px}
+  .otp-box{flex:1;min-width:0;aspect-ratio:1/1.05;max-width:56px;text-align:center;font-family:"Satoshi","Inter",sans-serif;font-size:1.3rem;font-weight:600;color:var(--ink);border:1px solid var(--line);border-radius:11px;background:var(--bg-tint);transition:.18s var(--ease)}
+  .otp-box:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px rgba(62,108,168,.15)}
+  .otp-resend{display:flex;align-items:center;justify-content:space-between;margin:14px 0 22px;font-size:.83rem;color:var(--muted)}
+  .demo-hint{font-size:.78rem;color:var(--accent);background:rgba(62,108,168,.08);border:1px dashed var(--aline);border-radius:10px;padding:9px 12px;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+  .demo-hint svg{width:15px;height:15px;flex:none}
+  .demo-hint b{font-family:"Satoshi","Inter",sans-serif;letter-spacing:.12em}
+
+  .divider{display:flex;align-items:center;gap:14px;margin:26px 0 20px;color:var(--muted-2);font-size:.78rem}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--line)}
+  .foot-cta{text-align:center;font-size:.9rem;color:var(--muted)}
+  .foot-cta a{color:var(--accent);font-weight:600;text-decoration:none}
+  .foot-cta a:hover{text-decoration:underline}
+
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--primary);color:#fff;padding:13px 20px;border-radius:12px;font-size:.86rem;display:flex;align-items:center;gap:10px;box-shadow:0 18px 40px -14px rgba(15,23,42,.6);border:1px solid var(--aline);opacity:0;visibility:hidden;transition:.3s var(--ease);z-index:60;}
+  .toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+  .toast svg{width:18px;height:18px;color:var(--light)}
+
+  @media (max-width:840px){
+    .auth-wrap{grid-template-columns:1fr;max-width:480px}
+    .brand-panel{padding:34px 30px;gap:26px}
+    .bp-copy h2{font-size:1.6rem}
+    .bp-points{display:none}
+  }
+  @media (max-width:480px){
+    .form-panel{padding:32px 22px}
+    .brand-panel{padding:28px 24px}
+    .header-inner{padding:12px 18px}
+    .wordmark .name{font-size:1.1rem}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="seal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#D5E1EF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M7 21h10"/><path d="M5 7h14"/><path d="M9 4.5 5 7 1.5 7"/><path d="M5 7 2 13a3 3 0 0 0 6 0L5 7Z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0l-3-6Z"/><circle cx="12" cy="4" r="1.4" fill="#D5E1EF" stroke="none"/></svg></div>
+      <div class="wordmark"><div class="name">EBA</div><div class="sub">Ernakulam Bar Association</div></div>
+    </div>
+    <a class="help-link" href="#" onclick="toast('Contact the association office for help');return false;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>Need help?</a>
+  </div>
+</header>
+
+<main>
+  <div class="auth-wrap">
+    <!-- Brand side -->
+    <section class="brand-panel">
+      <div class="bp-seal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#D5E1EF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M7 21h10"/><path d="M5 7h14"/><path d="M9 4.5 5 7 1.5 7"/><path d="M5 7 2 13a3 3 0 0 0 6 0L5 7Z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0l-3-6Z"/><circle cx="12" cy="4" r="1.4" fill="#D5E1EF" stroke="none"/></svg></div>
+      <div class="bp-copy">
+        <h2>Ernakulam Bar Association</h2>
+        <p>Cause lists, live court status, your cases and the member directory — all in one secure portal.</p>
+      </div>
+      <div class="bp-points">
+        <div class="bp-point"><span class="bpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>Today's cause list, ready every morning</div>
+        <div class="bp-point"><span class="bpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span>Live court status, updated in real time</div>
+        <div class="bp-point"><span class="bpi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span>E-file and track every matter</div>
+      </div>
+    </section>
+
+    <!-- Form side -->
+    <section class="form-panel">
+      <div class="fp-head">
+        <h1>Member Login</h1>
+        <!-- <p>Welcome back. Sign in to your EBA account.</p> -->
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button class="tab active" id="tab-pw" role="tab" aria-selected="true" onclick="switchMode('password')">Password</button>
+        <button class="tab" id="tab-otp" role="tab" aria-selected="false" onclick="switchMode('otp')">OTP</button>
+      </div>
+
+      <!-- Phone (shared) -->
+      <div class="field">
+        <label for="phone">Phone Number</label>
+        <div class="phone-group">
+          <span class="phone-prefix">+91</span>
+          <input class="inp" id="phone" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" autocomplete="tel" oninput="onPhoneInput(this)" />
+        </div>
+        <div class="field-msg" id="phoneMsg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg><span>Enter a valid 10-digit mobile number.</span></div>
+      </div>
+
+      <!-- PASSWORD MODE -->
+      <div id="mode-password">
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="pw-group">
+            <input class="inp" id="password" type="password" placeholder="Enter your password" autocomplete="current-password" />
+            <button class="pw-toggle" type="button" aria-label="Show password" onclick="togglePw('password',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.2A9.5 9.5 0 0 1 12 4c6.5 0 10 7 10 7a13.2 13.2 0 0 1-2.2 3"/><path d="M6.6 6.6A13.4 13.4 0 0 0 2 11s3.5 7 10 7a9.3 9.3 0 0 0 4.4-1.1"/><path d="M3 3l18 18"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button>
+          </div>
+        </div>
+        <div class="row-between">
+          <label class="remember"><input type="checkbox" id="remember" /><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>Remember me</label>
+          <a class="link" onclick="toast('A reset link will be sent to your registered number')">Forgot password?</a>
+        </div>
+        <button class="btn-primary" onclick="loginPassword()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><path d="m10 17 5-5-5-5M15 12H3"/></svg>Sign In</button>
+      </div>
+
+      <!-- OTP MODE -->
+      <div id="mode-otp" style="display:none">
+        <!-- request stage -->
+        <div id="otp-request">
+          <button class="btn-primary" onclick="sendLoginOtp()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>Send OTP</button>
+        </div>
+        <!-- verify stage -->
+        <div class="otp-stage" id="otp-verify">
+          <p class="otp-sent">We sent a 6-digit code to <b id="otpTarget">your number</b>.</p>
+          <div class="demo-hint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span>Demo code: <b id="otpDemo">––––––</b></span></div>
+          <div class="otp-boxes" id="otpBoxes"></div>
+          <div class="otp-resend">
+            <span id="otpTimer">Resend available in 0:30</span>
+            <a class="link" id="otpResend" style="pointer-events:none;opacity:.5" onclick="resendLoginOtp()">Resend code</a>
+          </div>
+          <button class="btn-primary" onclick="verifyLoginOtp()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Verify &amp; Sign In</button>
+          <div style="height:12px"></div>
+          <button class="btn-ghost" onclick="resetLoginOtp()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Change number</button>
+        </div>
+      </div>
+
+      <div class="divider">New to the portal?</div>
+      <div class="foot-cta">Don't have an account yet? <a href="eba-registration.html">Register here</a></div>
+    </section>
+  </div>
+</main>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span id="toastMsg"></span></div>
+
+<script>
+  let toastTimer;
+  function toast(msg){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400);}
+
+  function onPhoneInput(el){el.value=el.value.replace(/\D/g,'').slice(0,10);el.classList.remove('err');document.getElementById('phoneMsg').classList.remove('show');}
+  function phoneValid(){return /^\d{10}$/.test(document.getElementById('phone').value);}
+  function flagPhone(){const el=document.getElementById('phone');el.classList.add('err');document.getElementById('phoneMsg').classList.add('show');el.focus();}
+
+  function togglePw(id,btn){const f=document.getElementById(id);const show=f.type==='password';f.type=show?'text':'password';btn.setAttribute('aria-label',show?'Hide password':'Show password');btn.innerHTML=show
+    ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>'
+    :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9.9 4.2A9.5 9.5 0 0 1 12 4c6.5 0 10 7 10 7a13.2 13.2 0 0 1-2.2 3"/><path d="M6.6 6.6A13.4 13.4 0 0 0 2 11s3.5 7 10 7a9.3 9.3 0 0 0 4.4-1.1"/><path d="M3 3l18 18"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';}
+
+  let mode='password';
+  function switchMode(m){
+    mode=m;
+    document.getElementById('tab-pw').classList.toggle('active',m==='password');
+    document.getElementById('tab-otp').classList.toggle('active',m==='otp');
+    document.getElementById('tab-pw').setAttribute('aria-selected',m==='password');
+    document.getElementById('tab-otp').setAttribute('aria-selected',m==='otp');
+    document.getElementById('mode-password').style.display=m==='password'?'block':'none';
+    document.getElementById('mode-otp').style.display=m==='otp'?'block':'none';
+    if(m==='password') resetLoginOtp();
+  }
+
+  function loginPassword(){
+    if(!phoneValid()){flagPhone();return;}
+    const pw=document.getElementById('password').value;
+    if(pw.length<1){toast('Please enter your password');return;}
+    toast('Signing you in…');
+    setTimeout(()=>{window.location.href='eba.html';},900);
+  }
+
+  /* ---- Login via OTP ---- */
+  let loginOtp='', otpInterval;
+  function buildOtpBoxes(){
+    const wrap=document.getElementById('otpBoxes');
+    wrap.innerHTML=Array.from({length:6}).map((_,i)=>`<input class="otp-box" inputmode="numeric" maxlength="1" data-i="${i}" aria-label="Digit ${i+1}">`).join('');
+    wrap.querySelectorAll('.otp-box').forEach(b=>{
+      b.addEventListener('input',e=>{e.target.value=e.target.value.replace(/\D/g,'');if(e.target.value){const n=wrap.querySelector(`[data-i="${+e.target.dataset.i+1}"]`);if(n)n.focus();}});
+      b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!e.target.value){const p=wrap.querySelector(`[data-i="${+e.target.dataset.i-1}"]`);if(p){p.focus();p.value='';}}});
+      b.addEventListener('paste',e=>{e.preventDefault();const d=(e.clipboardData.getData('text')||'').replace(/\D/g,'').slice(0,6).split('');wrap.querySelectorAll('.otp-box').forEach((x,k)=>x.value=d[k]||'');const last=wrap.querySelector(`[data-i="${Math.min(d.length,5)}"]`);if(last)last.focus();});
+    });
+  }
+  function readOtp(){return Array.from(document.querySelectorAll('#otpBoxes .otp-box')).map(b=>b.value).join('');}
+  function startTimer(){
+    let s=30;const t=document.getElementById('otpTimer'),r=document.getElementById('otpResend');
+    r.style.pointerEvents='none';r.style.opacity='.5';
+    clearInterval(otpInterval);
+    otpInterval=setInterval(()=>{s--;t.textContent=`Resend available in 0:${String(s).padStart(2,'0')}`;if(s<=0){clearInterval(otpInterval);t.textContent='Didn\u2019t get the code?';r.style.pointerEvents='auto';r.style.opacity='1';}},1000);
+  }
+  function sendLoginOtp(){
+    if(!phoneValid()){flagPhone();return;}
+    loginOtp=String(Math.floor(100000+Math.random()*900000));
+    document.getElementById('otpDemo').textContent=loginOtp;
+    document.getElementById('otpTarget').textContent='+91 '+document.getElementById('phone').value.replace(/(\d{5})(\d{5})/,'$1 $2');
+    document.getElementById('otp-request').style.display='none';
+    document.getElementById('otp-verify').classList.add('show');
+    buildOtpBoxes();startTimer();
+    setTimeout(()=>{const f=document.querySelector('#otpBoxes .otp-box');if(f)f.focus();},60);
+    toast('OTP sent to your number');
+  }
+  function resendLoginOtp(){loginOtp=String(Math.floor(100000+Math.random()*900000));document.getElementById('otpDemo').textContent=loginOtp;startTimer();toast('A new OTP has been sent');}
+  function resetLoginOtp(){clearInterval(otpInterval);document.getElementById('otp-request').style.display='block';document.getElementById('otp-verify').classList.remove('show');}
+  function verifyLoginOtp(){
+    const v=readOtp();
+    if(v.length<6){toast('Enter the full 6-digit code');return;}
+    if(v!==loginOtp){toast('Incorrect code. Please try again');return;}
+    toast('Verified — signing you in…');
+    setTimeout(()=>{window.location.href='eba.html';},900);
+  }
+</script>
+</body>
+</html>

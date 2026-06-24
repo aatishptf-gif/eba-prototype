@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profile Details · EBA Member Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900,1&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#EEF3FA;--bg-tint:#F6F9FD;--card:#FFFFFF;
+    --primary:#0F172A;--primary-2:#1E293B;--primary-3:#334155;
+    --light:#D5E1EF;--light-soft:#E8EFF7;
+    --accent:#3E6CA8;--accent-bright:#5B86C4;
+    --ink:#0F172A;--muted:#52617C;--muted-2:#8593AC;
+    --line:rgba(15,23,42,.10);--aline:rgba(62,108,168,.32);
+    --red:#DC4C4C;--green:#3F9A5A;--amber:#D08A2E;
+    --shadow:0 1px 2px rgba(15,23,42,.06), 0 12px 32px -12px rgba(15,23,42,.20);
+    --shadow-deep:0 1px 2px rgba(15,23,42,.1), 0 16px 38px -16px rgba(15,23,42,.45);
+    --radius:18px;--ease:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:"Inter",system-ui,sans-serif;
+    background:radial-gradient(1100px 560px at 88% -8%,rgba(91,134,196,.14),transparent 58%),
+               radial-gradient(900px 520px at 0% 108%,rgba(15,23,42,.05),transparent 55%),
+               var(--bg);
+    color:var(--ink);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;
+  }
+
+  /* ── HEADER ── */
+  header{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#1E293B 0%,var(--primary) 100%);border-bottom:1px solid var(--aline);box-shadow:0 10px 30px -18px rgba(15,23,42,.6);}
+  .header-inner{max-width:1240px;margin:0 auto;padding:14px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  .brand{display:flex;align-items:center;gap:14px;min-width:0;cursor:pointer}
+  .seal{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#28344A,#0a0f1e);border:1.5px solid var(--accent-bright);box-shadow:0 0 0 3px rgba(91,134,196,.16);}
+  .seal svg{width:26px;height:26px}
+  .wordmark .name{font-family:"Satoshi","Inter",sans-serif;font-weight:600;letter-spacing:.10em;color:#fff;font-size:1.3rem;line-height:1;}
+  .wordmark .sub{color:var(--light);font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;margin-top:6px;white-space:nowrap;}
+  .tools{display:flex;align-items:center;gap:6px}
+  .icon-btn{width:42px;height:42px;border:none;cursor:pointer;border-radius:11px;background:rgba(255,255,255,.08);color:#dbe5f3;display:grid;place-items:center;transition:.25s var(--ease);}
+  .icon-btn:hover{background:rgba(91,134,196,.26);color:#fff;transform:translateY(-1px)}
+  .icon-btn svg{width:21px;height:21px}
+
+  /* ── MAIN LAYOUT ── */
+  main{max-width:1240px;margin:0 auto;}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ── BACK BUTTON ── */
+  .home-btn{display:inline-flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);color:var(--primary);font-family:"Inter",sans-serif;font-weight:600;font-size:.95rem;cursor:pointer;padding:11px 18px;border-radius:12px;margin-bottom:22px;box-shadow:var(--shadow);transition:.25s var(--ease);}
+  .home-btn:hover{transform:translateY(-2px);border-color:var(--aline);box-shadow:0 14px 30px -14px rgba(15,23,42,.35)}
+  .home-btn svg{width:18px;height:18px;color:var(--accent)}
+
+  /* ── PROFILE HERO BANNER ── */
+  .profile-hero{background:radial-gradient(120% 90% at 80% -20%,rgba(91,134,196,.25),transparent 55%),linear-gradient(155deg,#1E293B,#0F172A);border-radius:var(--radius);box-shadow:var(--shadow-deep);overflow:hidden;margin-bottom:24px;animation:fade .35s var(--ease);}
+  .hero-inner{padding:32px clamp(20px,4vw,40px);display:flex;align-items:flex-end;gap:28px;flex-wrap:wrap;}
+  .avatar-ring{position:relative;flex:none}
+  .avatar{width:112px;height:112px;border-radius:50%;object-fit:cover;border:3px solid var(--light);box-shadow:0 0 0 6px rgba(213,225,239,.14);background:#0a0f1e;display:block;}
+  .verified-badge{position:absolute;right:-2px;bottom:2px;width:32px;height:32px;border-radius:50%;background:var(--light);display:grid;place-items:center;border:3px solid #1E293B;}
+  .verified-badge svg{width:16px;height:16px;color:var(--primary)}
+  .hero-info{flex:1;min-width:220px}
+  .hero-info h1{font-family:"Satoshi","Inter",sans-serif;color:#fff;font-size:clamp(1.5rem,3vw,2rem);font-weight:700;line-height:1.1;margin-bottom:10px;}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+  .hero-pill{display:inline-flex;align-items:center;gap:7px;padding:5px 13px;border-radius:999px;border:1px solid var(--aline);background:rgba(213,225,239,.14);}
+  .hero-pill .k{font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--light)}
+  .hero-pill .v{font-family:"Satoshi","Inter",sans-serif;font-weight:700;color:#fff;font-size:.88rem;letter-spacing:.04em}
+  .hero-pill .sep{width:1px;height:14px;background:var(--aline)}
+  .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+  .btn-edit{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:11px;font-family:"Inter",sans-serif;font-weight:600;font-size:.88rem;cursor:pointer;transition:.22s var(--ease);}
+  .btn-edit.primary{background:var(--light);color:var(--primary);border:none;}
+  .btn-edit.primary:hover{transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(213,225,239,.5)}
+  .btn-edit.secondary{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.24);}
+  .btn-edit.secondary:hover{background:rgba(255,255,255,.18);transform:translateY(-2px)}
+  .btn-edit svg{width:16px;height:16px}
+
+  /* ── STATUS STRIP ── */
+  .status-strip{background:linear-gradient(90deg,rgba(63,154,90,.15),rgba(63,154,90,.05));border-bottom:1px solid rgba(63,154,90,.22);padding:10px clamp(20px,4vw,40px);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+  .status-dot{width:9px;height:9px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite;flex:none}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(63,154,90,.5)}70%{box-shadow:0 0 0 8px rgba(63,154,90,0)}100%{box-shadow:0 0 0 0 rgba(63,154,90,0)}}
+  .status-text{font-size:.82rem;font-weight:600;color:#2f7a48}
+  .status-sep{width:1px;height:16px;background:rgba(63,154,90,.3)}
+  .status-item{font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:6px}
+  .status-item svg{width:14px;height:14px;color:var(--accent)}
+  .badge-lifelong{background:linear-gradient(135deg,#1E293B,#334155);color:var(--light);font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:999px;border:1px solid var(--aline);}
+
+  /* ── SECTION GRID ── */
+  .sections{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .sections.full{grid-template-columns:1fr}
+  @media(max-width:780px){.sections{grid-template-columns:1fr}}
+
+  /* ── SECTION CARD ── */
+  .section-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;animation:fade .4s var(--ease) both}
+  .section-head{padding:16px 22px 12px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .section-title{display:flex;align-items:center;gap:10px}
+  .section-icon{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:linear-gradient(155deg,#1E293B,#0F172A);border:1px solid var(--aline);flex:none}
+  .section-icon svg{width:17px;height:17px;color:var(--light)}
+  .section-title h2{font-family:"Satoshi","Inter",sans-serif;font-size:1rem;font-weight:700;color:var(--primary)}
+  .section-edit{width:32px;height:32px;border:1px solid var(--line);background:none;border-radius:8px;cursor:pointer;display:grid;place-items:center;color:var(--muted-2);transition:.2s var(--ease);}
+  .section-edit:hover{background:var(--bg);border-color:var(--aline);color:var(--accent)}
+  .section-edit svg{width:15px;height:15px}
+  .fields-grid{padding:18px 22px 20px;display:grid;grid-template-columns:1fr 1fr;gap:16px 20px}
+  .fields-grid.cols1{grid-template-columns:1fr}
+  @media(max-width:560px){.fields-grid{grid-template-columns:1fr}}
+
+  /* ── FIELD ── */
+  .field{min-width:0}
+  .field.full{grid-column:1/-1}
+  .field-label{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+  .field-label svg{width:13px;height:13px;color:var(--accent);flex:none}
+  .field-label span{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .field-value{font-size:.92rem;color:var(--ink);font-weight:500;word-break:break-word;line-height:1.45}
+  .field-value.muted{color:var(--muted);font-weight:400}
+  .field-value.mono{font-family:"Satoshi","Inter",sans-serif;letter-spacing:.04em}
+
+  /* ── BLOOD GROUP PILL ── */
+  .blood-pill{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#DC4C4C,#b83a3a);color:#fff;padding:7px 16px;border-radius:999px;font-family:"Satoshi","Inter",sans-serif;font-weight:700;font-size:1rem;letter-spacing:.06em;box-shadow:0 6px 18px -8px rgba(220,76,76,.6);}
+  .blood-pill svg{width:15px;height:15px}
+
+  /* ── TAGS ── */
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:2px}
+  .tag{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;font-size:.8rem;font-weight:600;background:var(--light-soft);border:1px solid var(--line);color:var(--primary-3);transition:.2s var(--ease);}
+  .tag:hover{border-color:var(--aline);background:var(--light)}
+  .tag svg{width:13px;height:13px;color:var(--accent)}
+  .tag.sport{background:rgba(62,108,168,.10);border-color:rgba(62,108,168,.28);color:var(--accent)}
+  .tag.fitness{background:rgba(63,154,90,.10);border-color:rgba(63,154,90,.28);color:#2a6b40}
+  .tag.hobby{background:rgba(208,138,46,.12);border-color:rgba(208,138,46,.28);color:#7a4e0e}
+
+  /* ── DIVIDER ── */
+  .divider{height:1px;background:var(--line);margin:0 22px}
+
+  /* ── CONTACT ROW ── */
+  .contact-row{display:flex;align-items:center;gap:13px;padding:14px 22px;transition:.18s var(--ease);}
+  .contact-row:hover{background:var(--bg-tint)}
+  .contact-icon{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;flex:none}
+  .contact-icon.blue{background:rgba(62,108,168,.12);border:1px solid rgba(62,108,168,.22)}
+  .contact-icon.green{background:rgba(63,154,90,.12);border:1px solid rgba(63,154,90,.22)}
+  .contact-icon.amber{background:rgba(208,138,46,.12);border:1px solid rgba(208,138,46,.22)}
+  .contact-icon svg{width:17px;height:17px}
+  .contact-icon.blue svg{color:var(--accent)}
+  .contact-icon.green svg{color:var(--green)}
+  .contact-icon.amber svg{color:var(--amber)}
+  .contact-info{flex:1;min-width:0}
+  .contact-label{font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);font-weight:600;margin-bottom:2px}
+  .contact-val{font-size:.92rem;color:var(--ink);font-weight:500;word-break:break-all}
+  .contact-action{flex:none;width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:none;cursor:pointer;display:grid;place-items:center;color:var(--muted-2);transition:.2s var(--ease);}
+  .contact-action:hover{background:linear-gradient(155deg,#1E293B,#0F172A);color:var(--light);border-color:transparent}
+  .contact-action svg{width:15px;height:15px}
+
+  /* ── MEMBERSHIP CARD ── */
+  .mem-card{margin:14px 22px 20px;background:radial-gradient(120% 160% at 90% -20%,rgba(91,134,196,.32),transparent 60%),linear-gradient(150deg,#1E293B,#0F172A);border-radius:14px;padding:20px 22px;position:relative;overflow:hidden;}
+  .mem-card::after{content:"EBA";position:absolute;right:-10px;bottom:-18px;font-family:"Satoshi","Inter",sans-serif;font-weight:900;font-size:5.5rem;color:rgba(255,255,255,.03);letter-spacing:.1em;pointer-events:none;user-select:none;}
+  .mem-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .mem-left .mem-no{font-family:"Satoshi","Inter",sans-serif;color:#fff;font-size:1.5rem;font-weight:700;letter-spacing:.06em}
+  .mem-left .mem-type{margin-top:4px;display:inline-flex;align-items:center;gap:6px;padding:3px 11px;border-radius:999px;background:rgba(213,225,239,.16);border:1px solid var(--aline);}
+  .mem-left .mem-type span{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--light);font-weight:600}
+  .mem-dates{text-align:right}
+  .mem-dates .d-label{font-size:.62rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(213,225,239,.6);margin-bottom:3px}
+  .mem-dates .d-value{font-size:.88rem;color:var(--light);font-weight:600}
+  .mem-since{margin-top:14px;padding-top:14px;border-top:1px solid rgba(213,225,239,.1);display:flex;align-items:center;gap:8px}
+  .mem-since svg{width:15px;height:15px;color:rgba(213,225,239,.5)}
+  .mem-since span{font-size:.78rem;color:rgba(213,225,239,.7)}
+
+  /* ── TOAST ── */
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--primary);color:#fff;padding:13px 20px;border-radius:12px;font-size:.86rem;display:flex;align-items:center;gap:10px;box-shadow:0 18px 40px -14px rgba(15,23,42,.6);border:1px solid var(--aline);opacity:0;visibility:hidden;transition:.3s var(--ease);z-index:60;}
+  .toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+  .toast svg{width:18px;height:18px;color:var(--light)}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:640px){.hero-inner{flex-direction:column;align-items:flex-start}.hero-actions{width:100%}.btn-edit{flex:1;justify-content:center}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- <header>
+  <div class="header-inner">
+    <div class="brand" title="Go to home">
+      <div class="seal" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#D5E1EF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3v18"/><path d="M7 21h10"/><path d="M5 7h14"/>
+          <path d="M9 4.5 5 7 1.5 7"/><path d="M5 7 2 13a3 3 0 0 0 6 0L5 7Z"/>
+          <path d="M19 7l-3 6a3 3 0 0 0 6 0l-3-6Z"/>
+          <circle cx="12" cy="4" r="1.4" fill="#D5E1EF" stroke="none"/>
+        </svg>
+      </div>
+      <div class="wordmark">
+        <div class="name">EBA</div>
+        <div class="sub">Ernakulam Bar Association</div>
+      </div>
+    </div>
+    <div class="tools">
+      <button class="icon-btn" aria-label="Notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+        </svg>
+      </button>
+      <button class="icon-btn" aria-label="Sign out" onclick="showToast('Signed out')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header> -->
+
+<main>
+  <!-- <button class="home-btn" onclick="showToast('Returning to home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/>
+    </svg>
+    Home
+  </button> -->
+
+  <!-- HERO BANNER -->
+  <div class="profile-hero">
+    <div class="status-strip">
+      <span class="status-dot"></span>
+      <span class="status-text">Active Member</span>
+      <span class="status-sep"></span>
+      <span class="status-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4 12 14.01l-3-3"/></svg>
+        Verified Advocate
+      </span>
+      <span class="status-sep"></span>
+      <span class="status-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Member since 11 November 2004
+      </span>
+      <span class="badge-lifelong" style="margin-left:auto">Lifelong Membership</span>
+    </div>
+    <div class="hero-inner">
+      <div class="avatar-ring">
+        <img class="avatar" alt="Member portrait"
+          src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 112 112'><rect width='112' height='112' fill='%230a0f1e'/><circle cx='56' cy='44' r='20' fill='%23334155'/><path d='M20 104c0-20 16-32 36-32s36 12 36 32' fill='%23334155'/></svg>"
+        />
+        <span class="verified-badge" title="Verified member">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        </span>
+      </div>
+      <div class="hero-info">
+        <h1>Adv. Meera Krishnan</h1>
+        <div class="hero-meta">
+          <div class="hero-pill">
+            <span class="k">EBA No.</span><span class="sep"></span><span class="v">LD 1903</span>
+          </div>
+          <div class="hero-pill">
+            <span class="k">Bar Council</span><span class="sep"></span><span class="v">K/302/1983</span>
+          </div>
+          <div class="hero-pill">
+            <span class="k">Designation</span><span class="sep"></span><span class="v">Advocate</span>
+          </div>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-edit primary" onclick="showToast('Opening edit profile')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+            Edit Profile
+          </button>
+          <!-- <button class="btn-edit secondary" onclick="showToast('Downloading ID card (PDF)')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg>
+            Download ID Card
+          </button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 1: Personal + Contact -->
+  <div class="sections" style="margin-bottom:20px">
+
+    <!-- PERSONAL INFORMATION -->
+    <div class="section-card" style="animation-delay:.05s">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>
+          </div>
+          <h2>Personal Information</h2>
+        </div>
+        <button class="section-edit" onclick="showToast('Editing personal information')" title="Edit section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        </button>
+      </div>
+      <div class="fields-grid">
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Full Name</span>
+          </div>
+          <div class="field-value">Meera Krishnan</div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <span>Date of Birth</span>
+          </div>
+          <div class="field-value mono">11 / 08 / 1963</div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 1 5 5c0 4-5 11-5 11S7 11 7 7a5 5 0 0 1 5-5Z"/></svg>
+            <span>Gender</span>
+          </div>
+          <div class="field-value">Female</div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M2 12h20"/></svg>
+            <span>Blood Group</span>
+          </div>
+          <div class="field-value">
+            <span class="blood-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10C22 6.5 17.5 2 12 2Z"/><path d="M7 12c0-2.8 2.2-5 5-5s5 2.2 5 5"/></svg>
+              B+
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <span>Qualification</span>
+          </div>
+          <div class="field-value">BAL LLb</div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="m3 9 2.45-4.9A2 2 0 0 1 7.24 3h9.52a2 2 0 0 1 1.8 1.1L21 9"/><path d="M12 3v6"/></svg>
+            <span>Chamber</span>
+          </div>
+          <div class="field-value muted">No Chamber</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT DETAILS -->
+    <div class="section-card" style="animation-delay:.10s">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg>
+          </div>
+          <h2>Contact Details</h2>
+        </div>
+        <button class="section-edit" onclick="showToast('Editing contact details')" title="Edit section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        </button>
+      </div>
+
+      <div class="contact-row">
+        <div class="contact-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></div>
+        <div class="contact-info"><div class="contact-label">Mobile Number</div><div class="contact-val">+91 93xx xxxx xx</div></div>
+        <button class="contact-action" onclick="showToast('Calling mobile')" title="Call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></button>
+      </div>
+      <div class="divider"></div>
+
+      <div class="contact-row">
+        <div class="contact-icon amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></div>
+        <div class="contact-info"><div class="contact-label">Emergency Phone</div><div class="contact-val">9388056654</div></div>
+        <button class="contact-action" onclick="showToast('Calling emergency number')" title="Call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></button>
+      </div>
+      <div class="divider"></div>
+
+      <div class="contact-row">
+        <div class="contact-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></div>
+        <div class="contact-info"><div class="contact-label">Office / Additional Mobile</div><div class="contact-val">9388056654</div></div>
+        <button class="contact-action" onclick="showToast('Calling office number')" title="Call"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg></button>
+      </div>
+      <div class="divider"></div>
+
+      <div class="contact-row">
+        <div class="contact-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
+        <div class="contact-info"><div class="contact-label">Email Address</div><div class="contact-val">advocate@gmail.com</div></div>
+        <button class="contact-action" onclick="showToast('Opening email client')" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 2: Addresses + Membership -->
+  <div class="sections" style="margin-bottom:20px">
+
+    <!-- ADDRESSES -->
+    <div class="section-card" style="animation-delay:.15s">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h2>Addresses</h2>
+        </div>
+        <button class="section-edit" onclick="showToast('Editing addresses')" title="Edit section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        </button>
+      </div>
+      <div class="fields-grid cols1">
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg>
+            <span>Office Address</span>
+          </div>
+          <div class="field-value" style="font-weight:400;color:var(--muted);font-size:.9rem;line-height:1.5">Marine Chambers, 2nd Floor, Kuruppam Road Building, Marine Drive, Ernakulam Jn, Kochi 682018.</div>
+        </div>
+        <div class="divider" style="margin:0"></div>
+        <div class="field" style="padding-top:2px">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+            <span>Residential Address</span>
+          </div>
+          <div class="field-value" style="font-weight:400;color:var(--muted);font-size:.9rem;line-height:1.5">Marine Drive Residency, Panampilly Nagar Road, Ernakulam, Kochi 682036.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBERSHIP DETAILS -->
+    <div class="section-card" style="animation-delay:.20s">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18"/><path d="M3 9h18M3 13h18"/><rect x="2" y="3" width="20" height="18" rx="2"/></svg>
+          </div>
+          <h2>Membership &amp; Enrolment</h2>
+        </div>
+      </div>
+      <div class="mem-card">
+        <div class="mem-row">
+          <div class="mem-left">
+            <div class="mem-no">LD 1903</div>
+            <div class="mem-type"><span>Lifelong Membership</span></div>
+          </div>
+          <div class="mem-dates">
+            <div class="d-label">Admitted (KHCAA)</div>
+            <div class="d-value">11 Nov 2004</div>
+          </div>
+        </div>
+        <div class="mem-since">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <span>20+ years of continuous membership</span>
+        </div>
+      </div>
+      <div class="fields-grid">
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6"/></svg>
+            <span>Bar Council Enrolment</span>
+          </div>
+          <div class="field-value mono">K/302/1983</div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <span>Date of Enrolment</span>
+          </div>
+          <div class="field-value mono">3 March 1983</div>
+        </div>
+        <div class="field full">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>
+            <span>Other Bar Association Membership</span>
+          </div>
+          <div class="field-value">Palluruthy Bar Association</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Fitness / Sports / Hobbies (full width) -->
+  <div class="sections full" style="margin-bottom:20px">
+    <div class="section-card" style="animation-delay:.25s">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8Z"/><path d="M6 1v3M10 1v3M14 1v3"/></svg>
+          </div>
+          <h2>Fitness, Sports &amp; Hobbies</h2>
+        </div>
+        <button class="section-edit" onclick="showToast('Editing interests')" title="Edit section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        </button>
+      </div>
+      <div class="fields-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8Z"/><path d="M6 1v3M10 1v3M14 1v3"/></svg>
+            <span>Fitness Activities</span>
+          </div>
+          <div class="tags">
+            <span class="tag fitness">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Yoga
+            </span>
+            <span class="tag fitness">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Morning Walk
+            </span>
+            <span class="tag fitness">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              Swimming
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v9l4 2"/></svg>
+            <span>Sports Interests</span>
+          </div>
+          <div class="tags">
+            <span class="tag sport">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
+              Badminton
+            </span>
+            <span class="tag sport">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
+              Table Tennis
+            </span>
+            <span class="tag sport">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/></svg>
+              Chess
+            </span>
+          </div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            <span>Hobbies &amp; Extracurriculars</span>
+          </div>
+          <div class="tags">
+            <span class="tag hobby">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              Reading
+            </span>
+            <span class="tag hobby">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+              Classical Music
+            </span>
+            <span class="tag hobby">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+              Legal Writing
+            </span>
+            <span class="tag hobby">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              Gardening
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 4: Emergency  -->
+  <div class="sections" style="margin-bottom:20px">
+    <div class="section-card" style="animation-delay:.30s;border-top:3px solid var(--red)">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon" style="background:linear-gradient(155deg,#8a1f1f,#DC4C4C);border-color:rgba(220,76,76,.4)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12.5 8 16l11.5-11"/><circle cx="12" cy="12" r="9"/></svg>
+          </div>
+          <h2>Emergency &amp; Medical Reference</h2>
+        </div>
+        <button class="section-edit" onclick="showToast('Editing emergency info')" title="Edit section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        </button>
+      </div>
+      <div class="fields-grid">
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10C22 6.5 17.5 2 12 2Z"/></svg>
+            <span>Blood Group</span>
+          </div>
+          <div class="field-value"><span class="blood-pill">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10C22 6.5 17.5 2 12 2Z"/><path d="M7 12c0-2.8 2.2-5 5-5s5 2.2 5 5"/></svg>
+            B+
+          </span></div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg>
+            <span>Emergency Contact</span>
+          </div>
+          <div class="field-value">9388056654</div>
+        </div>
+        <div class="field full">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span>Next of Kin / Emergency Contact Name</span>
+          </div>
+          <div class="field-value">Krishnan P. (Spouse)</div>
+        </div>
+        <!-- <div class="field full" style="background:rgba(220,76,76,.04);border:1px solid rgba(220,76,76,.12);border-radius:10px;padding:12px 14px">
+          <div class="field-label" style="margin-bottom:6px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
+            <span style="color:#9a3030">Obituary Notification Consent</span>
+          </div>
+          <div class="field-value" style="font-size:.88rem;color:var(--muted);font-weight:400;line-height:1.5">Consent given for the Association to issue an obituary notification to members in the event of the member's passing. Contact the next of kin listed above to inform the secretariat.</div>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- PROFESSIONAL DETAILS -->
+    <div class="section-card" style="animation-delay:.35s">
+      <div class="section-head">
+        <div class="section-title">
+          <div class="section-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-3V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M9 7V5h6v2"/></svg>
+          </div>
+          <h2>Professional Details</h2>
+        </div>
+        <button class="section-edit" onclick="showToast('Editing professional details')" title="Edit section">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+        </button>
+      </div>
+      <div class="fields-grid">
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            <span>Designation</span>
+          </div>
+          <div class="field-value">Advocate</div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5-10-5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            <span>Qualification</span>
+          </div>
+          <div class="field-value">BAL LLb</div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <span>Years in Practice</span>
+          </div>
+          <div class="field-value">40+ years</div>
+        </div>
+        <div class="field">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18"/><path d="M3 9h18M3 13h18"/><rect x="2" y="3" width="20" height="18" rx="2"/></svg>
+            <span>Membership Status</span>
+          </div>
+          <div class="field-value">
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;background:rgba(63,154,90,.12);border:1px solid rgba(63,154,90,.28);color:#2a6b40;font-weight:700;font-size:.8rem">
+              <span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span>
+              Active
+            </span>
+          </div>
+        </div>
+        <div class="field full">
+          <div class="field-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 1 5 5c0 4-5 11-5 11S7 11 7 7a5 5 0 0 1 5-5Z"/></svg>
+            <span>Areas of Practice</span>
+          </div>
+          <div class="tags" style="margin-top:4px">
+            <span class="tag">Civil</span>
+            <span class="tag">Constitutional</span>
+            <span class="tag">Family Law</span>
+            <span class="tag">Revenue</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+  <span id="toastMsg"></span>
+</div>
+
+<script>
+  let _toastTimer;
+  function showToast(msg){
+    const t=document.getElementById('toast');
+    document.getElementById('toastMsg').textContent=msg;
+    t.classList.add('show');
+    clearTimeout(_toastTimer);
+    _toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ernakulam Bar Association · Member Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900,1&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#EEF3FA;--bg-tint:#F6F9FD;--card:#FFFFFF;
+    --primary:#0F172A;--primary-2:#1E293B;--primary-3:#334155;
+    --light:#D5E1EF;--light-soft:#E8EFF7;
+    --accent:#3E6CA8;--accent-bright:#5B86C4;
+    --ink:#0F172A;--muted:#52617C;--muted-2:#8593AC;
+    --line:rgba(15,23,42,.10);--aline:rgba(62,108,168,.32);
+    --red:#DC4C4C;--green:#3F9A5A;--amber:#D08A2E;
+    --shadow:0 1px 2px rgba(15,23,42,.06), 0 12px 32px -12px rgba(15,23,42,.20);
+    --shadow-deep:0 1px 2px rgba(15,23,42,.1), 0 16px 38px -16px rgba(15,23,42,.45);
+    --radius:18px;--ease:cubic-bezier(.2,.7,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{font-family:"Inter",system-ui,sans-serif;
+    background:radial-gradient(1100px 560px at 88% -8%, rgba(91,134,196,.14), transparent 58%),radial-gradient(900px 520px at 0% 108%, rgba(15,23,42,.05), transparent 55%),var(--bg);
+    color:var(--ink);min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased;}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:40;background:linear-gradient(180deg,#1E293B 0%, var(--primary) 100%);border-bottom:1px solid var(--aline);box-shadow:0 10px 30px -18px rgba(15,23,42,.6);}
+  .header-inner{max-width:1240px;margin:0 auto;padding:14px clamp(16px,4vw,40px);display:flex;align-items:center;justify-content:space-between;gap:16px;}
+  .brand{display:flex;align-items:center;gap:14px;min-width:0;cursor:pointer}
+  .seal{width:48px;height:48px;flex:none;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%, #28344A, #0a0f1e);border:1.5px solid var(--accent-bright);box-shadow:0 0 0 3px rgba(91,134,196,.16);}
+  .seal svg{width:26px;height:26px}
+  .wordmark .name{font-family:"Satoshi","Inter",sans-serif;font-weight:600;letter-spacing:.10em;color:#fff;font-size:1.3rem;line-height:1;}
+  .wordmark .sub{color:var(--light);font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .tools{display:flex;align-items:center;gap:6px}
+  .icon-btn{position:relative;width:42px;height:42px;border:none;cursor:pointer;border-radius:11px;background:rgba(255,255,255,.08);color:#dbe5f3;display:grid;place-items:center;transition:.25s var(--ease);}
+  .icon-btn:hover{background:rgba(91,134,196,.26);color:#fff;transform:translateY(-1px)}
+  .icon-btn:focus-visible{outline:2px solid var(--accent-bright);outline-offset:2px}
+  .icon-btn svg{width:21px;height:21px}
+  .dot{position:absolute;top:9px;right:9px;width:8px;height:8px;border-radius:50%;background:var(--accent-bright);border:2px solid var(--primary);}
+  .notif{position:absolute;top:54px;right:0;width:min(320px,84vw);background:var(--card);border-radius:14px;padding:8px;box-shadow:0 24px 60px -20px rgba(15,23,42,.4);border:1px solid var(--line);opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);transition:.22s var(--ease);transform-origin:top right;}
+  .notif.open{opacity:1;visibility:visible;transform:none}
+  .notif h4{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding:10px 12px 6px}
+  .notif-item{display:flex;gap:11px;padding:11px 12px;border-radius:10px;transition:.18s}
+  .notif-item:hover{background:var(--bg)}
+  .notif-item .mk{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:7px;flex:none}
+  .notif-item p{font-size:.84rem;color:var(--ink);line-height:1.35}
+  .notif-item span{font-size:.72rem;color:var(--muted-2)}
+
+  /* Views */
+  .view[hidden]{display:none}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .view{animation:fade .35s var(--ease)}
+  main{max-width:1240px;margin:0 auto;padding:clamp(20px,4vw,40px)}
+
+  /* HOME */
+  .grid{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:clamp(20px,3vw,32px);align-items:start}
+  .profile{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;position:relative;border:1px solid var(--line);}
+  .profile-top{background:radial-gradient(120% 90% at 80% -20%, rgba(213,225,239,.22), transparent 55%),linear-gradient(160deg,#1E293B,#0F172A);padding:30px 28px 56px;position:relative;}
+  .profile-top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--light),transparent);}
+  .avatar-wrap{position:relative;width:104px;height:104px;margin-bottom:18px}
+  .avatar{width:104px;height:104px;border-radius:50%;object-fit:cover;border:3px solid var(--light);box-shadow:0 0 0 5px rgba(213,225,239,.14);background:#0a0f1e;}
+  .verified{position:absolute;right:-2px;bottom:2px;width:30px;height:30px;border-radius:50%;background:var(--light);display:grid;place-items:center;border:3px solid #1E293B;}
+  .verified svg{width:15px;height:15px;color:var(--primary)}
+  .pname{font-family:"Satoshi","Inter",sans-serif;color:#fff;font-size:1.6rem;font-weight:600;line-height:1.12}
+  .credential{display:inline-flex;align-items:center;gap:8px;margin-top:11px;padding:5px 12px;border-radius:999px;background:rgba(213,225,239,.16);border:1px solid var(--aline);}
+  .credential .k{font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:var(--light)}
+  .credential .v{font-family:"Satoshi","Inter",sans-serif;font-weight:600;color:#fff;letter-spacing:.05em}
+  .fields{padding:26px 28px 8px;display:grid;grid-template-columns:1fr 1fr;gap:22px 20px}
+  .field{min-width:0}.field.full{grid-column:1/-1}
+  .field .label{display:flex;align-items:center;gap:7px;margin-bottom:6px}
+  .field .label svg{width:15px;height:15px;color:var(--accent);flex:none}
+  .field .label span{font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .field .value{font-size:.95rem;color:var(--ink);font-weight:500;word-break:break-word;line-height:1.4}
+  .field.full .value{font-weight:400;color:#3b485f;font-size:.9rem}
+  .profile-foot{padding:18px 28px 28px}
+  .btn-primary{width:100%;border:none;cursor:pointer;padding:14px 18px;border-radius:12px;font-family:"Inter",sans-serif;font-weight:600;font-size:.92rem;color:#fff;background:linear-gradient(180deg,var(--primary-3),var(--primary));display:flex;align-items:center;justify-content:center;gap:9px;transition:.25s var(--ease);box-shadow:0 8px 22px -10px rgba(15,23,42,.65);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 30px -10px rgba(15,23,42,.8)}
+  .btn-primary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn-primary svg{width:18px;height:18px;color:var(--light)}
+  .services-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:8px}
+  .services-head h2{font-family:"Satoshi","Inter",sans-serif;font-size:1.7rem;font-weight:600;color:var(--primary)}
+  .services-head h2 .em{color:var(--accent);font-style:italic}
+  .services-head p{font-size:.82rem;color:var(--muted)}
+  .svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,1.8vw,20px)}
+  .svc{position:relative;text-align:left;cursor:pointer;border:none;background:radial-gradient(120% 120% at 100% 0%, rgba(91,134,196,.22), transparent 50%),linear-gradient(155deg,#1E293B,#0F172A);color:#fff;border-radius:var(--radius);padding:24px 22px;min-height:148px;display:flex;flex-direction:column;justify-content:space-between;gap:18px;overflow:hidden;font-family:inherit;box-shadow:var(--shadow-deep);transition:transform .3s var(--ease), box-shadow .3s var(--ease);}
+  .svc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--accent-bright);transform:scaleY(0);transform-origin:bottom;transition:transform .35s var(--ease);}
+  .svc:hover{transform:translateY(-5px);box-shadow:0 1px 2px rgba(15,23,42,.1),0 28px 50px -20px rgba(15,23,42,.55)}
+  .svc:hover::before{transform:scaleY(1)}
+  .svc:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .svc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .svc-ic{width:46px;height:46px;border-radius:12px;flex:none;display:grid;place-items:center;background:rgba(213,225,239,.16);border:1px solid var(--aline);transition:.3s var(--ease);}
+  .svc:hover .svc-ic{background:var(--light);transform:rotate(-4deg) scale(1.05)}
+  .svc-ic svg{width:23px;height:23px;color:var(--light);transition:.3s}
+  .svc:hover .svc-ic svg{color:var(--primary)}
+  .svc-arrow{color:rgba(213,225,239,.5);transition:.3s var(--ease)}
+  .svc:hover .svc-arrow{color:var(--light);transform:translate(3px,-3px)}
+  .svc-arrow svg{width:20px;height:20px}
+  .svc h3{font-family:"Satoshi","Inter",sans-serif;font-size:1.25rem;font-weight:600;line-height:1.15;letter-spacing:.01em}
+  .svc p{font-size:.78rem;color:rgba(213,225,239,.72);margin-top:5px;line-height:1.4}
+  .badge{position:absolute;top:14px;right:14px;font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--primary);background:var(--light);padding:3px 8px;border-radius:999px;}
+
+  /* shared inner-page chrome */
+  .home-btn{display:inline-flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);color:var(--primary);font-family:"Inter",sans-serif;font-weight:600;font-size:.95rem;cursor:pointer;padding:11px 18px;border-radius:12px;margin-bottom:22px;box-shadow:var(--shadow);transition:.25s var(--ease);}
+  .home-btn:hover{transform:translateY(-2px);border-color:var(--aline);box-shadow:0 14px 30px -14px rgba(15,23,42,.35)}
+  .home-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .home-btn svg{width:18px;height:18px;color:var(--accent)}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);display:grid;grid-template-columns:218px 1fr;overflow:hidden;min-height:540px;}
+  .side{padding:22px 16px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:4px}
+  .side-link{text-align:left;border:none;background:none;cursor:pointer;font-family:inherit;font-size:.95rem;font-weight:500;color:var(--muted);padding:12px 16px;border-radius:11px;transition:.2s var(--ease);white-space:nowrap;}
+  .side-link:hover{background:rgba(62,108,168,.10);color:var(--primary)}
+  .side-link.active{background:linear-gradient(180deg,var(--primary-3),var(--primary));color:#fff;font-weight:600;box-shadow:0 8px 18px -10px rgba(15,23,42,.6)}
+  .side-link:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .content{padding:22px clamp(16px,2.4vw,26px) 28px;min-width:0}
+  .work-head{background:radial-gradient(120% 200% at 100% 0%, rgba(91,134,196,.22), transparent 55%),linear-gradient(155deg,#1E293B,#0F172A);border-radius:14px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;}
+  .work-head h2{font-family:"Satoshi","Inter",sans-serif;color:#fff;font-size:1.5rem;font-weight:600}
+  .filters{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{cursor:pointer;font-family:inherit;font-size:.84rem;font-weight:600;border-radius:999px;padding:9px 16px;background:transparent;color:#cdd9ea;border:1px solid rgba(255,255,255,.24);transition:.22s var(--ease);display:inline-flex;gap:6px;align-items:center;}
+  .chip span{opacity:.8;font-weight:500}
+  .chip:hover{border-color:var(--light);color:#fff}
+  .chip.active{background:var(--light);color:var(--primary);border-color:var(--light)}
+  .chip.active span{opacity:.7}
+  .chip:focus-visible{outline:2px solid var(--light);outline-offset:2px}
+
+  /* MY CASES */
+  .search-row{position:relative;margin:20px 0 22px;max-width:420px;margin-left:auto}
+  .search-row svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted-2)}
+  #caseSearch{width:100%;padding:13px 16px 13px 42px;border-radius:12px;border:1px solid var(--line);background:var(--bg-tint);font-family:inherit;font-size:.92rem;color:var(--ink);transition:.2s var(--ease)}
+  #caseSearch::placeholder{color:var(--muted-2)}
+  #caseSearch:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px rgba(62,108,168,.15)}
+  .cases-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:16px}
+  .case{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .25s var(--ease);animation:fade .4s var(--ease) both}
+  .case:hover{transform:translateY(-4px);border-color:var(--aline);box-shadow:0 18px 38px -18px rgba(15,23,42,.4)}
+  .case-top{background:linear-gradient(160deg,#1E293B,#0F172A);padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .case-top .court{color:#fff;font-weight:600;font-size:.9rem}
+  .status{font-size:.64rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 11px;border-radius:999px}
+  .status.disposed{background:var(--red);color:#fff}
+  .status.pending{background:var(--green);color:#fff}
+  .case-body{padding:15px 16px;flex:1}
+  .case-body .pet{font-weight:600;color:var(--ink);font-size:.92rem;line-height:1.3}
+  .case-body .vs{display:block;font-size:.72rem;color:var(--muted-2);text-transform:uppercase;letter-spacing:.1em;margin:6px 0}
+  .case-body .res{color:var(--muted);font-size:.86rem;line-height:1.35}
+  .case-foot{padding:0 16px 15px;display:flex;justify-content:flex-end}
+  .case-no{background:var(--light);color:var(--primary);font-weight:700;font-size:.78rem;letter-spacing:.02em;padding:6px 12px;border-radius:8px}
+  .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:48px 16px;font-size:.95rem}
+  .empty strong{display:block;color:var(--primary);font-family:"Satoshi","Inter",sans-serif;font-size:1.15rem;font-weight:600;margin-bottom:6px}
+
+  /* MY CAUSE LIST */
+  .cl-controls{display:flex;align-items:center;gap:10px}
+  .cl-date{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-family:inherit;font-size:.86rem;color:var(--ink);cursor:pointer}
+  .cl-date:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px rgba(62,108,168,.15)}
+  .cl-dl{width:44px;height:44px;border:none;border-radius:11px;cursor:pointer;background:var(--primary);color:var(--light);display:grid;place-items:center;transition:.22s var(--ease)}
+  .cl-dl:hover{transform:translateY(-2px);box-shadow:0 10px 22px -10px rgba(15,23,42,.7)}
+  .cl-dl:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .cl-dl svg{width:20px;height:20px}
+  .cl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;margin-top:22px}
+  .cl-card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column;transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .25s var(--ease);animation:fade .4s var(--ease) both}
+  .cl-card:hover{transform:translateY(-4px);border-color:var(--aline);box-shadow:0 18px 38px -18px rgba(15,23,42,.4)}
+  .cl-meta{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 4px}
+  .cl-code{background:linear-gradient(180deg,var(--primary-3),var(--primary));color:#fff;font-weight:700;font-size:.92rem;letter-spacing:.04em;padding:7px 14px;border-radius:9px;box-shadow:0 6px 14px -8px rgba(15,23,42,.7)}
+  .cl-serial{border:1px solid var(--line);border-radius:9px;padding:6px 14px;color:var(--accent);font-weight:700;font-size:.95rem;background:var(--bg-tint)}
+  .cl-foot{margin:6px 16px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .cl-itemno{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(160deg,#1E293B,#0F172A);border-radius:9px;padding:8px 12px}
+  .cl-itemno .k{color:#b9c6dc;font-size:.7rem;font-weight:600;letter-spacing:.04em}
+  .cl-itemno .v{color:var(--light);font-weight:700;font-size:.86rem}
+  .cl-caseno{color:var(--ink);font-weight:600;font-size:.84rem}
+
+  /* LIVE COURT STATUS */
+  .lh-pill{background:#fff;border-radius:11px;padding:11px 16px;display:inline-flex;align-items:center;gap:9px;font-weight:600;color:var(--primary);font-size:.92rem;box-shadow:0 6px 16px -10px rgba(15,23,42,.5)}
+  .lh-pill svg{width:17px;height:17px;color:var(--accent);flex:none}
+  .live-label{color:var(--green);font-weight:700;letter-spacing:.02em}
+  .live-dot{width:9px;height:9px;border-radius:50%;background:var(--green);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(63,154,90,.5)}70%{box-shadow:0 0 0 8px rgba(63,154,90,0)}100%{box-shadow:0 0 0 0 rgba(63,154,90,0)}}
+  .lh-div{width:1px;height:18px;background:var(--line);margin:0 3px}
+  #liveClock{font-variant-numeric:tabular-nums;min-width:92px}
+  .court-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:12px;margin-top:22px}
+  .court-tile{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--aline);cursor:pointer;font-family:inherit;background:linear-gradient(160deg,#1E293B,#0F172A);color:#fff;border-radius:11px;padding:15px 17px;transition:.22s var(--ease);text-align:left;animation:fade .4s var(--ease) both}
+  .court-tile:hover{transform:translateY(-3px);box-shadow:0 14px 28px -16px rgba(15,23,42,.6);border-color:var(--light)}
+  .court-tile:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .ct-code{font-weight:700;font-size:1rem;letter-spacing:.03em}
+  .ct-num{font-weight:700;font-size:1rem;color:var(--accent-bright);font-variant-numeric:tabular-nums}
+  .ct-num.idle{color:var(--muted-2);font-weight:600}
+  .court-tile.mine{background:linear-gradient(120deg,var(--accent-bright),var(--accent));border-color:transparent;box-shadow:0 12px 26px -12px rgba(62,108,168,.75)}
+  .court-tile.mine .ct-num{color:#fff}
+  .court-tile.mine .ct-num.idle{color:rgba(255,255,255,.78)}
+
+  /* GRIEVANCES */
+  .grv-form{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:20px 22px;margin-top:22px}
+  .grv-form h3{font-family:"Satoshi","Inter",sans-serif;font-size:1.15rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:9px}
+  .grv-form h3 svg{width:19px;height:19px;color:var(--accent);flex:none}
+  .grv-form .hint{font-size:.8rem;color:var(--muted);margin-top:6px;line-height:1.45}
+  .grv-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+  .grv-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .grv-field.full{grid-column:1/-1}
+  .grv-field label{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .inp{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--bg-tint);font-family:inherit;font-size:.9rem;color:var(--ink);transition:.2s var(--ease)}
+  .inp::placeholder{color:var(--muted-2)}
+  .inp:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px rgba(62,108,168,.14)}
+  textarea.inp{min-height:96px;resize:vertical;line-height:1.5}
+  .grv-actions{display:flex;justify-content:flex-end;margin-top:16px}
+  .btn-submit{border:none;cursor:pointer;padding:12px 22px;border-radius:11px;font-family:inherit;font-weight:600;font-size:.9rem;color:#fff;background:linear-gradient(180deg,var(--primary-3),var(--primary));display:inline-flex;align-items:center;gap:8px;transition:.25s var(--ease);box-shadow:0 8px 20px -10px rgba(15,23,42,.6)}
+  .btn-submit:hover{transform:translateY(-2px);box-shadow:0 14px 28px -10px rgba(15,23,42,.75)}
+  .btn-submit:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .btn-submit svg{width:17px;height:17px;color:var(--light)}
+  .grv-list-head{margin:26px 0 14px;font-family:"Satoshi","Inter",sans-serif;font-size:1.05rem;font-weight:700;color:var(--primary);display:flex;align-items:center;gap:8px}
+  .grv-list-head span{color:var(--muted);font-weight:500;font-size:.9rem}
+  .grv-list{display:flex;flex-direction:column;gap:14px}
+  .grv-card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;animation:fade .4s var(--ease) both}
+  .grv-head{width:100%;text-align:left;border:none;background:none;cursor:pointer;font-family:inherit;display:flex;align-items:flex-start;gap:14px;padding:16px 18px;transition:.18s}
+  .grv-head:hover{background:var(--bg-tint)}
+  .grv-head-l{flex:1;min-width:0}
+  .grv-id{font-size:.7rem;font-weight:700;letter-spacing:.06em;color:var(--accent)}
+  .grv-subject{font-family:"Satoshi","Inter",sans-serif;font-size:1.02rem;font-weight:600;color:var(--ink);margin:3px 0 8px;line-height:1.25}
+  .grv-tags{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .grv-tag{font-size:.72rem;font-weight:600;color:var(--muted);background:var(--bg);border:1px solid var(--line);padding:3px 10px;border-radius:999px}
+  .grv-tag.pr-high{color:#9a3b38;background:rgba(220,76,76,.10);border-color:rgba(220,76,76,.25)}
+  .grv-tag.pr-medium{color:#9a6a1e;background:rgba(208,138,46,.12);border-color:rgba(208,138,46,.28)}
+  .grv-tag.pr-low{color:#2f6b46;background:rgba(63,154,90,.12);border-color:rgba(63,154,90,.28)}
+  .grv-date{font-size:.72rem;color:var(--muted-2)}
+  .grv-status{flex:none;font-size:.64rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:5px 11px;border-radius:999px;white-space:nowrap}
+  .st-submitted{background:var(--light);color:var(--primary)}
+  .st-review{background:var(--amber);color:#3a2a05}
+  .st-committee{background:var(--accent);color:#fff}
+  .st-meeting{background:var(--accent-bright);color:#fff}
+  .st-resolved{background:var(--green);color:#fff}
+  .st-closed{background:#dbe0ea;color:#566179}
+  .grv-chev{flex:none;width:18px;height:18px;color:var(--muted-2);transition:transform .25s var(--ease);margin-top:2px}
+  .grv-card.open .grv-chev{transform:rotate(180deg)}
+  .grv-body{display:none;padding:4px 18px 20px;border-top:1px solid var(--line)}
+  .grv-card.open .grv-body{display:block}
+  .grv-section-t{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:16px 0 12px}
+  .timeline{position:relative;margin-left:6px;padding-left:22px}
+  .timeline::before{content:"";position:absolute;left:4px;top:5px;bottom:6px;width:2px;background:var(--line)}
+  .tl-item{position:relative;padding-bottom:16px}
+  .tl-item:last-child{padding-bottom:0}
+  .tl-item::before{content:"";position:absolute;left:-22px;top:3px;width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 3px var(--card),0 0 0 4px var(--accent)}
+  .tl-item.done::before{background:var(--green);box-shadow:0 0 0 3px var(--card),0 0 0 4px var(--green)}
+  .tl-item.pending::before{background:var(--muted-2);box-shadow:0 0 0 3px var(--card),0 0 0 4px rgba(133,147,172,.5)}
+  .tl-item.pending .tl-label{color:var(--muted)}
+  .tl-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .tl-label{font-weight:700;color:var(--ink);font-size:.86rem}
+  .tl-date{font-size:.72rem;color:var(--muted-2)}
+  .tl-text{font-size:.84rem;color:var(--muted);margin-top:3px;line-height:1.45}
+  .grv-res{margin-top:18px;background:rgba(63,154,90,.08);border:1px solid rgba(63,154,90,.25);border-radius:12px;padding:14px 16px}
+  .grv-res-h{display:flex;align-items:center;gap:8px;font-weight:700;color:#2f6b46;font-size:.9rem}
+  .grv-res-h svg{width:17px;height:17px;flex:none}
+  .grv-res .forum{display:inline-block;margin-top:9px;font-size:.7rem;font-weight:600;color:var(--primary);background:var(--light);padding:3px 10px;border-radius:999px}
+  .grv-res p{font-size:.85rem;color:#3c4a3f;line-height:1.5;margin-top:9px}
+  @media (max-width:560px){.grv-grid{grid-template-columns:1fr}}
+
+  /* DIRECTORY */
+  .dir-search{position:relative;margin:22px 0;max-width:520px}
+  .dir-search > svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted-2)}
+  #dirSearch{width:100%;padding:13px 16px 13px 42px;border-radius:12px;border:1px solid var(--line);background:var(--bg-tint);font-family:inherit;font-size:.92rem;color:var(--ink);transition:.2s var(--ease)}
+  #dirSearch::placeholder{color:var(--muted-2)}
+  #dirSearch:focus{outline:none;border-color:var(--accent);background:#fff;box-shadow:0 0 0 4px rgba(62,108,168,.14)}
+  .dir-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+  .dir-card{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;cursor:pointer;text-align:left;font-family:inherit;transition:.22s var(--ease);width:100%;animation:fade .4s var(--ease) both}
+  .dir-card:hover{transform:translateY(-3px);border-color:var(--aline);box-shadow:0 16px 32px -18px rgba(15,23,42,.4)}
+  .dir-av{flex:none;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:700;font-family:"Satoshi","Inter",sans-serif;letter-spacing:.02em}
+  .dir-av.sm{width:52px;height:52px;font-size:1.05rem}
+  .dir-av.lg{width:92px;height:92px;font-size:1.9rem;border:3px solid var(--light);box-shadow:0 0 0 4px rgba(213,225,239,.18)}
+  .dir-info{flex:1;min-width:0}
+  .dir-name{font-weight:600;color:var(--ink);font-size:.98rem;font-family:"Satoshi","Inter",sans-serif}
+  .dir-line{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.82rem;margin-top:3px;min-width:0}
+  .dir-line svg{width:13px;height:13px;color:var(--accent);flex:none}
+  .dir-line span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .dir-chev{flex:none;color:var(--muted-2);width:18px;height:18px}
+  .back-link{display:inline-flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;font-family:inherit;font-weight:600;font-size:.9rem;color:var(--accent);padding:6px 4px;margin-bottom:16px;transition:.2s var(--ease)}
+  .back-link:hover{color:var(--primary);transform:translateX(-2px)}
+  .back-link svg{width:18px;height:18px}
+  .adv-card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;animation:fade .35s var(--ease)}
+  .adv-top{background:radial-gradient(120% 160% at 90% -30%, rgba(91,134,196,.28), transparent 55%),linear-gradient(155deg,#1E293B,#0F172A);padding:26px;display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+  .adv-top-info{min-width:0}
+  .adv-top-info h2{font-family:"Satoshi","Inter",sans-serif;color:#fff;font-size:1.5rem;font-weight:700;line-height:1.15}
+  .adv-top-info .role{color:var(--light);font-size:.84rem;margin-top:5px}
+  .adv-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .adv-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:11px;font-family:inherit;font-weight:600;font-size:.88rem;text-decoration:none;cursor:pointer;transition:.22s var(--ease)}
+  .adv-btn svg{width:16px;height:16px}
+  .adv-btn.call{background:var(--light);color:var(--primary)}
+  .adv-btn.email{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.28)}
+  .adv-btn:hover{transform:translateY(-2px)}
+  .adv-body{padding:22px 24px}
+  .adv-block{margin-bottom:22px}
+  .adv-block:last-child{margin-bottom:0}
+  .adv-block-t{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+  .adv-block-t svg{width:15px;height:15px;color:var(--accent);flex:none}
+  .adv-addr{display:flex;gap:10px;color:var(--ink);font-size:.9rem;line-height:1.5;align-items:flex-start}
+  .adv-addr svg{width:17px;height:17px;color:var(--accent);flex:none;margin-top:2px}
+  .people{display:flex;flex-direction:column;gap:8px}
+  .person{display:flex;align-items:center;gap:12px;background:var(--bg-tint);border:1px solid var(--line);border-radius:11px;padding:10px 12px}
+  .person .pav{width:38px;height:38px;border-radius:50%;flex:none;display:grid;place-items:center;color:#fff;font-weight:700;font-size:.78rem;font-family:"Satoshi","Inter",sans-serif}
+  .person .pn{flex:1;min-width:0}
+  .person .pn b{font-weight:600;color:var(--ink);font-size:.9rem;display:block}
+  .person .pn small{color:var(--muted);font-size:.78rem}
+  .person-call{flex:none;width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--light);color:var(--primary);text-decoration:none;transition:.2s var(--ease)}
+  .person-call:hover{background:var(--accent);color:#fff}
+  .person-call svg{width:17px;height:17px}
+  .empty-mini{color:var(--muted-2);font-size:.85rem;font-style:italic}
+
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--primary);color:#fff;padding:13px 20px;border-radius:12px;font-size:.86rem;display:flex;align-items:center;gap:10px;box-shadow:0 18px 40px -14px rgba(15,23,42,.6);border:1px solid var(--aline);opacity:0;visibility:hidden;transition:.3s var(--ease);z-index:60;}
+  .toast.show{opacity:1;visibility:visible;transform:translateX(-50%) translateY(0)}
+  .toast svg{width:18px;height:18px;color:var(--light)}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .animate{opacity:0;animation:rise .6s var(--ease) forwards}
+
+  /* Responsive */
+  @media (max-width:920px){.grid{grid-template-columns:1fr}}
+  @media (max-width:800px){
+    .panel{grid-template-columns:1fr}
+    .side{flex-direction:row;overflow-x:auto;border-right:none;border-bottom:1px solid var(--line);padding:14px 12px;gap:6px}
+    .search-row{margin-left:0}
+  }
+  @media (max-width:560px){
+    .fields{grid-template-columns:1fr}.svc-grid{grid-template-columns:1fr}
+    .wordmark .name{font-size:1.1rem}.pname{font-size:1.4rem}.svc{min-height:auto}
+    .work-head{flex-direction:column;align-items:flex-start}
+    .cl-controls{width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand" onclick="go('home')" title="Go to home">
+      <div class="seal" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#D5E1EF" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18"/><path d="M7 21h10"/><path d="M5 7h14"/><path d="M9 4.5 5 7 1.5 7"/><path d="M5 7 2 13a3 3 0 0 0 6 0L5 7Z"/><path d="M19 7l-3 6a3 3 0 0 0 6 0l-3-6Z"/><circle cx="12" cy="4" r="1.4" fill="#D5E1EF" stroke="none"/></svg></div>
+      <div class="wordmark"><div class="name">EBA</div><div class="sub">Ernakulam Bar Association</div></div>
+    </div>
+    <div class="tools">
+      <button class="icon-btn" id="bellBtn" aria-label="Notifications" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="dot"></span></button>
+      <div class="notif" id="notif" role="dialog" aria-label="Notifications">
+        <h4>Notifications</h4>
+        <div class="notif-item"><span class="mk"></span><div><p>Cause list for tomorrow is now published.</p><span>2 hours ago</span></div></div>
+        <div class="notif-item"><span class="mk"></span><div><p>Your e-filing in O.S 482/2026 was accepted.</p><span>Yesterday</span></div></div>
+        <div class="notif-item"><span class="mk" style="background:transparent"></span><div><p>Association general body meeting on 5 July.</p><span>3 days ago</span></div></div>
+      </div>
+      <button class="icon-btn" aria-label="Sign out" onclick="toast('Signed out');setTimeout(()=>{window.location.href='eba-login.html';},900);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HOME ============ -->
+<div class="view" id="view-home">
+<main>
+  <div class="grid">
+    <section class="profile animate" style="animation-delay:.05s" aria-label="Member profile">
+      <div class="profile-top">
+        <div class="avatar-wrap">
+          <img class="avatar" alt="Member portrait" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 104 104'><rect width='104' height='104' fill='%230a0f1e'/><circle cx='52' cy='40' r='18' fill='%23334155'/><path d='M20 96c0-18 14-28 32-28s32 10 32 28' fill='%23334155'/></svg>" />
+          <span class="verified" title="Verified member"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span>
+        </div>
+        <h1 class="pname">Adv. Meera Krishnan</h1>
+        <div class="credential"><span class="k">Member</span><span class="v">EBA 1903</span></div>
+      </div>
+      <div class="fields">
+        <div class="field"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span>Email</span></div><div class="value">advocate@gmail.com</div></div>
+        <div class="field"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg><span>Mobile Number</span></div><div class="value">+91 98xxxx xx54</div></div>
+        <div class="field"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 11h-6"/></svg><span>Bar Council Enrollment</span></div><div class="value">K/xxxx/2008</div></div>
+        <div class="field"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg><span>Emergency Phone</span></div><div class="value">+91 938xxxx x4</div></div>
+        <div class="field full"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg><span>Office Address</span></div><div class="value">Marine Chambers, 2nd Floor, Kuruppam Road Building, Marine Drive, Ernakulam Jn, Kochi 682018.</div></div>
+        <div class="field full"><div class="label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg><span>Office / Additional Mobile</span></div><div class="value">+91 93xxxx xxxx</div></div>
+      </div>
+      <div class="profile-foot"><button class="btn-primary" onclick="go('profiledetails')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>Profile Details</button></div>
+    </section>
+
+    <section aria-label="Services">
+      <div class="services-head animate" style="animation-delay:.12s"><h2>Your <span class="em">Services</span></h2><p>Everything you need for the day in court</p></div>
+      <div class="svc-grid">
+        <button class="svc animate" style="animation-delay:.16s" onclick="go('causelist')">
+          <div class="svc-top"><span class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span><span class="svc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div>
+          <div><h3>My Cause List</h3><p>Today's hearings and your listed matters</p></div>
+        </button>
+        <button class="svc animate" style="animation-delay:.20s" onclick="go('livestatus')">
+          <div class="svc-top"><span class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></span><span class="svc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div>
+          <div><h3>Live Court Status</h3><p>Which court is hearing what, right now</p></div>
+        </button>
+        <button class="svc animate" style="animation-delay:.24s" onclick="go('cases')">
+          <div class="svc-top"><span class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7h-3V5a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2Z"/><path d="M9 7V5h6v2"/></svg></span><span class="svc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div>
+          <div><h3>My Cases</h3><p>Every matter you're on, in one place</p></div>
+        </button>
+        <button class="svc animate" style="animation-delay:.28s" onclick="toast('Opening E-Filing')">
+          <div class="svc-top"><span class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13l2 2 4-4"/></svg></span><span class="svc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div>
+          <div><h3>E-Filing</h3><p>Submit filings to the registry online</p></div>
+        </button>
+        <button class="svc animate" style="animation-delay:.32s" onclick="toast('Opening My Subscriptions')">
+          <div class="svc-top"><span class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg></span><span class="svc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div>
+          <div><h3>My Subscriptions</h3><p>Membership status and renewals</p></div>
+        </button>
+        <button class="svc animate" style="animation-delay:.40s" onclick="go('grievances')">
+          <div class="svc-top"><span class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg></span><span class="svc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div>
+          <div><h3>Grievances</h3><p>Raise an issue and track the committee's response</p></div>
+        </button>
+        <button class="svc animate" style="animation-delay:.44s" onclick="go('directory')">
+          <div class="svc-top"><span class="svc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="10" r="2.6"/><path d="M8.4 16.2a3.7 3.7 0 0 1 7.2 0"/><path d="M4 7h2M4 11h2M4 15h2"/></svg></span><span class="svc-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span></div>
+          <div><h3>Directory</h3><p>Find advocates and their contact details</p></div>
+        </button>
+      </div>
+    </section>
+  </div>
+</main>
+</div>
+
+<!-- ============ MY CAUSE LIST ============ -->
+<div class="view" id="view-causelist" hidden>
+<main>
+  <button class="home-btn" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>Home</button>
+  <div class="panel">
+    <aside class="side">
+      <button class="side-link active">My Cause List</button>
+      <button class="side-link" onclick="go('livestatus')">Live Court Status</button>
+      <button class="side-link" onclick="go('cases')">My Cases</button>
+      <button class="side-link" onclick="go('grievances')">Grievances</button>
+      <button class="side-link" onclick="go('directory')">Directory</button>
+      <button class="side-link" onclick="toast('Opening Associates')">Associates</button>
+    </aside>
+    <section class="content">
+      <div class="work-head">
+        <div class="filters">
+          <button class="chip active" data-cl="all" onclick="setClFilter(this)">All</button>
+          <button class="chip" data-cl="1A" onclick="setClFilter(this)">1A</button>
+          <button class="chip" data-cl="2E" onclick="setClFilter(this)">2E</button>
+          <button class="chip" data-cl="7D" onclick="setClFilter(this)">7D</button>
+        </div>
+        <div class="cl-controls">
+          <input type="date" class="cl-date" value="2026-06-22" onchange="toast('Cause list for '+this.value)" aria-label="Cause list date" />
+          <button class="cl-dl" title="Download cause list" onclick="toast('Downloading cause list (PDF)')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 11 5 5 5-5"/><path d="M5 21h14"/></svg></button>
+        </div>
+      </div>
+      <div class="cl-grid" id="clGrid"></div>
+    </section>
+  </div>
+</main>
+</div>
+
+<!-- ============ LIVE COURT STATUS ============ -->
+<div class="view" id="view-livestatus" hidden>
+<main>
+  <button class="home-btn" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>Home</button>
+  <div class="panel">
+    <aside class="side">
+      <button class="side-link" onclick="go('causelist')">My Cause List</button>
+      <button class="side-link active">Live Court Status</button>
+      <button class="side-link" onclick="go('cases')">My Cases</button>
+      <button class="side-link" onclick="go('grievances')">Grievances</button>
+      <button class="side-link" onclick="go('directory')">Directory</button>
+      <button class="side-link" onclick="toast('Opening Associates')">Associates</button>
+    </aside>
+    <section class="content">
+      <div class="work-head">
+        <div class="lh-pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span id="liveDate">&mdash;</span></div>
+        <div class="lh-pill"><span class="live-label">Live</span><span class="live-dot"></span><span class="lh-div"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="liveClock">&mdash;</span></div>
+      </div>
+      <div class="court-grid" id="courtGrid"></div>
+    </section>
+  </div>
+</main>
+</div>
+
+<!-- ============ GRIEVANCES ============ -->
+<div class="view" id="view-grievances" hidden>
+<main>
+  <button class="home-btn" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>Home</button>
+  <div class="panel">
+    <aside class="side">
+      <button class="side-link" onclick="go('causelist')">My Cause List</button>
+      <button class="side-link" onclick="go('livestatus')">Live Court Status</button>
+      <button class="side-link" onclick="go('cases')">My Cases</button>
+      <button class="side-link active">Grievances</button>
+      <button class="side-link" onclick="go('directory')">Directory</button>
+      <button class="side-link" onclick="toast('Opening Associates')">Associates</button>
+    </aside>
+    <section class="content">
+      <div class="work-head">
+        <h2>Grievances</h2>
+        <div class="filters">
+          <button class="chip active" data-grv="all" onclick="setGrvFilter(this)">All</button>
+          <button class="chip" data-grv="review" onclick="setGrvFilter(this)">Under Review</button>
+          <button class="chip" data-grv="resolved" onclick="setGrvFilter(this)">Resolved</button>
+        </div>
+      </div>
+
+      <div class="grv-form">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><path d="M4 22v-7"/></svg>Raise a Grievance</h3>
+        <p class="hint">Your grievance is routed to the Grievance Committee for review. You'll see each status update and the committee's resolution below.</p>
+        <div class="grv-grid">
+          <div class="grv-field full">
+            <label for="grvSubject">Subject</label>
+            <input class="inp" id="grvSubject" placeholder="Brief title of the issue" />
+          </div>
+          <div class="grv-field full">
+            <label for="grvDetails">Details</label>
+            <textarea class="inp" id="grvDetails" placeholder="Describe the issue — include dates, location, and any relevant context."></textarea>
+          </div>
+        </div>
+        <div class="grv-actions">
+          <button class="btn-submit" onclick="submitGrievance()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>Submit Grievance</button>
+        </div>
+      </div>
+
+      <div class="grv-list-head">Your Grievances <span id="grvCount"></span></div>
+      <div class="grv-list" id="grvList"></div>
+    </section>
+  </div>
+</main>
+</div>
+
+<!-- ============ DIRECTORY ============ -->
+<div class="view" id="view-directory" hidden>
+<main>
+  <button class="home-btn" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>Home</button>
+  <div class="panel">
+    <aside class="side">
+      <button class="side-link" onclick="go('causelist')">My Cause List</button>
+      <button class="side-link" onclick="go('livestatus')">Live Court Status</button>
+      <button class="side-link" onclick="go('cases')">My Cases</button>
+      <button class="side-link" onclick="go('grievances')">Grievances</button>
+      <button class="side-link active">Directory</button>
+      <button class="side-link" onclick="toast('Opening Associates')">Associates</button>
+    </aside>
+    <section class="content">
+      <div id="dirList">
+        <div class="work-head"><h2>Advocates Directory</h2></div>
+        <div class="dir-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="dirSearch" placeholder="Search by name, mobile, or email..." oninput="renderDir()" />
+        </div>
+        <div class="dir-grid" id="dirGrid"></div>
+      </div>
+      <div id="dirDetail" hidden></div>
+    </section>
+  </div>
+</main>
+</div>
+
+<!-- ============ MY CASES ============ -->
+<div class="view" id="view-cases" hidden>
+<main>
+  <button class="home-btn" onclick="go('home')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></svg>Home</button>
+  <div class="panel">
+    <aside class="side">
+      <button class="side-link" onclick="go('causelist')">My Cause List</button>
+      <button class="side-link" onclick="go('livestatus')">Live Court Status</button>
+      <button class="side-link active">My Cases</button>
+      <button class="side-link" onclick="go('grievances')">Grievances</button>
+      <button class="side-link" onclick="go('directory')">Directory</button>
+      <button class="side-link" onclick="toast('Opening Associates')">Associates</button>
+    </aside>
+    <section class="content">
+      <div class="work-head">
+        <h2>My Cases</h2>
+        <div class="filters">
+          <button class="chip active" data-filter="all" onclick="setFilter(this)">All <span>1360</span></button>
+          <button class="chip" data-filter="pending" onclick="setFilter(this)">Pending <span>262</span></button>
+          <button class="chip" data-filter="disposed" onclick="setFilter(this)">Disposed <span>1098</span></button>
+        </div>
+      </div>
+      <div class="search-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="caseSearch" placeholder="Search by case number..." oninput="applyFilters()" />
+      </div>
+      <div class="cases-grid" id="casesGrid"></div>
+    </section>
+  </div>
+</main>
+</div>
+
+<!-- ============ PROFILE DETAILS ============ -->
+<div class="view" id="view-profiledetails" hidden>
+<main>
+  <button class="home-btn" onclick="go('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/>
+    </svg>
+    Home
+  </button>
+  <iframe 
+    src="eba-profile-details.html" 
+    style="width:100%;border:none;border-radius:18px;min-height:90vh;display:block;"
+    title="Profile Details"
+  ></iframe>
+</main>
+</div>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><span id="toastMsg"></span></div>
+
+<script>
+  const COURT = "District Court Ernakulam";
+  function go(view){document.querySelectorAll('.view').forEach(v=>v.hidden=(v.id!=='view-'+view));if(view==='directory'){var dd=document.getElementById('dirDetail'),dl=document.getElementById('dirList');if(dd&&dl){dd.hidden=true;dl.hidden=false;}}window.scrollTo({top:0,behavior:'smooth'});}
+  const bell=document.getElementById('bellBtn'), notif=document.getElementById('notif');
+  bell.addEventListener('click',e=>{e.stopPropagation();const o=notif.classList.toggle('open');bell.setAttribute('aria-expanded',o);});
+  document.addEventListener('click',e=>{if(!notif.contains(e.target)&&e.target!==bell){notif.classList.remove('open');bell.setAttribute('aria-expanded','false');}});
+  let toastTimer;
+  function toast(msg){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);}
+
+  const CAUSELIST=[
+    {code:"1A",serial:24,status:"pending",pet:"Indrajith Menon",res:"The State of Kerala, Secretary to Government",itemNo:"79 (Connection)",no:"WP(C) 7795/2025"},
+    {code:"1A",serial:24,status:"pending",pet:"V. Sreekumar",res:"State of Kerala & The District Collector, Ernakulam",itemNo:"7",no:"WP(C) 2143/2026"},
+    {code:"2E",serial:111,status:"pending",pet:"T.R Keerthana (Minor)",res:"Shriram General Insurance Co. Ltd & The Manager",itemNo:"49",no:"M.C.A 09/2026"},
+    {code:"7D",serial:33,status:"pending",pet:"Joseph Thomas",res:"Cochin Port Trust & The Estate Officer",itemNo:"12",no:"O.S 540/2025"},
+    {code:"2E",serial:58,status:"pending",pet:"Ayesha Beevi",res:"Kerala State Road Transport Corporation",itemNo:"21",no:"M.C.A 88/2025"},
+    {code:"1A",serial:9,status:"pending",pet:"M/s Western Exports",res:"The Commissioner of Customs, Kochi",itemNo:"3",no:"Crl.M.C 412/2026"},
+    {code:"7D",serial:71,status:"pending",pet:"Radhika Nair",res:"The Sub Registrar, Ernakulam & Others",itemNo:"30",no:"O.S 1207/2024"}
+  ];
+  function renderCL(list){
+    const grid=document.getElementById('clGrid');
+    if(!list.length){grid.innerHTML='<div class="empty"><strong>Nothing listed</strong>No matters for this bench on the selected date.</div>';return;}
+    grid.innerHTML=list.map((c,i)=>`<article class="cl-card" style="animation-delay:${i*0.04}s"><div class="case-top"><span class="court">${COURT}</span><span class="status ${c.status}">${c.status}</span></div><div class="cl-meta"><span class="cl-code">${c.code}</span><span class="cl-serial">${c.serial}</span></div><div class="case-body"><p class="pet">${c.pet}</p><span class="vs">vs</span><p class="res">${c.res}</p></div><div class="cl-foot"><span class="cl-itemno"><span class="k">Item No:</span><span class="v">${c.itemNo}</span></span><span class="cl-caseno">${c.no}</span></div></article>`).join('');
+  }
+  let clFilter='all';
+  function setClFilter(btn){document.querySelectorAll('[data-cl]').forEach(c=>c.classList.remove('active'));btn.classList.add('active');clFilter=btn.dataset.cl;renderCL(clFilter==='all'?CAUSELIST:CAUSELIST.filter(c=>c.code===clFilter));}
+
+  const CASES=[
+    {status:"disposed",pet:"K. Anand Kumar",res:"E.K. Vishwanath, The District Collector, State of Kerala",no:"WP(C) 4835/2017"},
+    {status:"disposed",pet:"P. Rajeevan",res:"The Principal, K.M.M. College & Kerala Minority Educational Association",no:"CRL.A 1217/2016"},
+    {status:"disposed",pet:"Deepa S. Nair",res:"The Manager, M.E.S. School, The District Educational Officer & Others",no:"WP(C) 12569/2021"},
+    {status:"pending",pet:"M/s Coastal Traders",res:"Union Bank of India & The Authorised Officer",no:"RFA 482/2024"},
+    {status:"pending",pet:"Smt. Latha Menon",res:"State of Kerala, Secretary to Government, Dept. of Revenue",no:"WP(C) 8841/2025"},
+    {status:"pending",pet:"George Mathew",res:"Susan George",no:"MAT.Appeal 76/2025"},
+    {status:"disposed",pet:"Hari Krishnan",res:"Kochi Municipal Corporation & The Secretary",no:"WP(C) 3320/2019"},
+    {status:"disposed",pet:"Abdul Razak",res:"State of Kerala, represented by the Public Prosecutor",no:"CRL.M.C 9912/2020"},
+    {status:"pending",pet:"Marine Drive Residents Welfare Assn.",res:"Greater Cochin Development Authority & Others",no:"O.S 220/2026"}
+  ];
+  function renderCases(list){
+    const grid=document.getElementById('casesGrid');
+    if(!list.length){grid.innerHTML='<div class="empty"><strong>No matching cases</strong>Try a different case number or filter.</div>';return;}
+    grid.innerHTML=list.map((c,i)=>`<article class="case" style="animation-delay:${i*0.04}s"><div class="case-top"><span class="court">${COURT}</span><span class="status ${c.status}">${c.status}</span></div><div class="case-body"><p class="pet">${c.pet}</p><span class="vs">vs</span><p class="res">${c.res}</p></div><div class="case-foot"><span class="case-no">${c.no}</span></div></article>`).join('');
+  }
+  let currentFilter='all';
+  function setFilter(btn){document.querySelectorAll('[data-filter]').forEach(c=>c.classList.remove('active'));btn.classList.add('active');currentFilter=btn.dataset.filter;applyFilters();}
+  function applyFilters(){
+    const q=document.getElementById('caseSearch').value.trim().toLowerCase();
+    const list=CASES.filter(c=>{const okStatus=currentFilter==='all'||c.status===currentFilter;const okSearch=!q||c.no.toLowerCase().includes(q)||c.pet.toLowerCase().includes(q)||c.res.toLowerCase().includes(q);return okStatus&&okSearch;});
+    renderCases(list);
+  }
+  /* ---------- LIVE COURT STATUS ---------- */
+  // "mine" = benches where you have a matter listed today (from the cause list)
+  const MINE = new Set(['1A','2E','7D']);
+  const COURTS = [
+    {code:"CJ",num:null},{code:"1A",num:null},{code:"1B",num:23},{code:"1C",num:3},{code:"1D",num:1},
+    {code:"2A",num:null},{code:"2B",num:null},{code:"2C",num:null},{code:"2D",num:4},{code:"2E",num:null},
+    {code:"3A",num:null},{code:"3B",num:null},{code:"3C",num:null},{code:"3D",num:3},{code:"3E",num:1},
+    {code:"4A",num:null},{code:"4B",num:10},{code:"4C",num:null},{code:"4D",num:null},{code:"5A",num:13},
+    {code:"5B",num:15},{code:"5C",num:null},{code:"5D",num:37},{code:"6A",num:13},{code:"6B",num:2},
+    {code:"6C",num:5},{code:"6D",num:null},{code:"6E",num:null},{code:"7A",num:1},{code:"7B",num:null},
+    {code:"7C",num:null},{code:"7D",num:null}
+  ];
+  function renderCourts(){
+    const grid=document.getElementById('courtGrid');
+    grid.innerHTML=COURTS.map((c,i)=>{
+      const mine=MINE.has(c.code)?' mine':'';
+      const idle=c.num==null?' idle':'';
+      const sit=c.num==null?'is not sitting':'is hearing item '+c.num;
+      return `<button class="court-tile${mine}" style="animation-delay:${i*0.015}s" onclick="toast('Court ${c.code} ${sit}')"><span class="ct-code">${c.code}</span><span class="ct-num${idle}">${c.num==null?'&mdash;':c.num}</span></button>`;
+    }).join('');
+  }
+  function tickClock(){
+    const now=new Date();
+    const d=document.getElementById('liveDate'), t=document.getElementById('liveClock');
+    if(d) d.textContent=now.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    if(t) t.textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  }
+  renderCourts(); tickClock(); setInterval(tickClock,1000);
+
+  /* ---------- GRIEVANCES ---------- */
+  const STATUS={
+    review:{label:"Under Review",cls:"st-review"},
+    resolved:{label:"Resolved",cls:"st-resolved"}
+  };
+  let GRIEVANCES=[
+    {id:"GRV-2026-027",subject:"Request for additional two-wheeler parking for members",status:"review",submitted:"2026-06-18",details:"The current member parking fills up by mid-morning. Requesting allotment of additional two-wheeler space near the rear gate.",resolvedDate:null,resolution:null},
+    {id:"GRV-2026-021",subject:"Delay in issuing membership renewal receipts",status:"review",submitted:"2026-06-02",details:"Renewal receipts for this year have not been issued more than three weeks after payment.",resolvedDate:null,resolution:null},
+    {id:"GRV-2026-014",subject:"Air conditioning not working in Court Hall 4A",status:"resolved",submitted:"2026-05-12",details:"The AC in Hall 4A has not worked for two weeks, making afternoon sittings difficult.",resolvedDate:"2026-05-22",resolution:"The committee coordinated with the court administration and the AC unit in Court Hall 4A was repaired on 21 May 2026. The complainant was informed and the matter is closed."},
+    {id:"GRV-2026-009",subject:"SCC Online library subscription has lapsed",status:"resolved",submitted:"2026-04-20",details:"Members are unable to access SCC Online; the subscription appears to have expired.",resolvedDate:"2026-05-08",resolution:"Renewal of the SCC Online subscription was approved and reinstated for all members. The complainant was informed and the matter is closed."}
+  ];
+  let grvSeq=27, grvFilter='all';
+  function fmtDate(iso){return new Date(iso+'T00:00:00').toLocaleDateString('en-US',{day:'numeric',month:'short',year:'numeric'});}
+  function renderGrv(){
+    const list=document.getElementById('grvList');
+    document.getElementById('grvCount').textContent='('+GRIEVANCES.length+')';
+    const data=grvFilter==='all'?GRIEVANCES:GRIEVANCES.filter(g=>g.status===grvFilter);
+    if(!data.length){list.innerHTML='<div class="empty"><strong>No grievances</strong>Nothing to show for this filter.</div>';return;}
+    list.innerHTML=data.map((g,idx)=>{
+      const s=STATUS[g.status];
+      const subText=g.details?g.details:"Grievance received and logged with the Grievance Committee.";
+      let tl=`<div class="tl-item"><div class="tl-top"><span class="tl-label">Submitted</span><span class="tl-date">${fmtDate(g.submitted)}</span></div><div class="tl-text">${subText}</div></div>`;
+      if(g.status==='resolved'){
+        tl+=`<div class="tl-item done"><div class="tl-top"><span class="tl-label">Resolution Taken</span><span class="tl-date">${fmtDate(g.resolvedDate)}</span></div><div class="tl-text">${g.resolution}</div></div>`;
+      }else{
+        tl+=`<div class="tl-item pending"><div class="tl-top"><span class="tl-label">Resolution Taken</span><span class="tl-date">Pending</span></div><div class="tl-text">Awaiting the committee's resolution.</div></div>`;
+      }
+      return `<article class="grv-card${idx===0?' open':''}" style="animation-delay:${idx*0.04}s">
+        <button class="grv-head" onclick="toggleGrv(this)">
+          <div class="grv-head-l">
+            <span class="grv-id">${g.id}</span>
+            <h3 class="grv-subject">${g.subject}</h3>
+            <div class="grv-tags"><span class="grv-date">Submitted ${fmtDate(g.submitted)}</span></div>
+          </div>
+          <span class="grv-status ${s.cls}">${s.label}</span>
+          <svg class="grv-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="grv-body">
+          <div class="grv-section-t">Status &amp; Committee Updates</div>
+          <div class="timeline">${tl}</div>
+        </div>
+      </article>`;
+    }).join('');
+  }
+  function toggleGrv(btn){btn.closest('.grv-card').classList.toggle('open');}
+  function setGrvFilter(btn){document.querySelectorAll('[data-grv]').forEach(c=>c.classList.remove('active'));btn.classList.add('active');grvFilter=btn.dataset.grv;renderGrv();}
+  function submitGrievance(){
+    const subj=document.getElementById('grvSubject').value.trim();
+    const det=document.getElementById('grvDetails').value.trim();
+    if(!subj||!det){toast('Please add a subject and details');return;}
+    grvSeq++;
+    const id='GRV-2026-'+String(grvSeq).padStart(3,'0');
+    const today=new Date().toISOString().slice(0,10);
+    GRIEVANCES.unshift({id,subject:subj,status:'review',submitted:today,details:det,resolvedDate:null,resolution:null});
+    document.getElementById('grvSubject').value='';document.getElementById('grvDetails').value='';
+    grvFilter='all';document.querySelectorAll('[data-grv]').forEach(c=>c.classList.toggle('active',c.dataset.grv==='all'));
+    renderGrv();
+    toast('Grievance '+id+' submitted');
+  }
+  renderGrv();
+  /* ---------- DIRECTORY ---------- */
+  const ICON={
+    phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8.1 9.6a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2Z"/></svg>',
+    mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+    pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg>',
+    users:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    user:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 21v-1a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v1"/></svg>',
+    chev:'<svg class="dir-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+    back:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>'
+  };
+  const DIR_COLORS=['#1E293B','#3E6CA8','#334155','#5B86C4','#243B6B','#46618F'];
+  function initials(n){return n.replace(/^(Adv\.|Smt\.|Sri\.?|Mr\.|Ms\.)\s*/,'').trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+  function avBg(i){return DIR_COLORS[Math.abs(i)%DIR_COLORS.length];}
+  const DIRECTORY=[
+    {id:"adv1",name:"Adv. Rajesh Nair",enrollment:"K/842/2005",mobile:"+91 98470 11234",email:"rajesh.nair.adv@gmail.com",office:"Ramaniyam Chambers, 1st Floor, Marine Drive, Ernakulam, Kochi 682031.",juniors:[{name:"Adv. Anjali Menon",phone:"+91 90370 22115"},{name:"Adv. Vishnu Prasad",phone:"+91 94470 33980"}],clerks:[{name:"Suresh K.",phone:"+91 99950 44021"}]},
+    {id:"adv2",name:"Adv. Fathima Beevi",enrollment:"K/1290/2009",mobile:"+91 99610 55678",email:"fathima.adv@gmail.com",office:"Hilite Square, Banerji Road, Ernakulam, Kochi 682018.",juniors:[{name:"Adv. Nikhil Raj",phone:"+91 70120 88345"}],clerks:[{name:"Ramesh P.",phone:"+91 85890 77410"},{name:"Latha S.",phone:"+91 81290 66132"}]},
+    {id:"adv3",name:"Adv. Thomas Kurian",enrollment:"K/655/2002",mobile:"+91 94000 22210",email:"tkurian.law@gmail.com",office:"Penta Tower, Kaloor, Ernakulam, Kochi 682017.",juniors:[{name:"Adv. Sandra Jose",phone:"+91 90480 12009"}],clerks:[{name:"Biju M.",phone:"+91 97450 33188"}]},
+    {id:"adv4",name:"Adv. Anand Menon",enrollment:"K/1480/2011",mobile:"+91 98950 77881",email:"anand.menon.adv@gmail.com",office:"Bab Towers, M.G. Road, Ernakulam, Kochi 682035.",juniors:[{name:"Adv. Keerthi R.",phone:"+91 99620 41123"},{name:"Adv. Hari S.",phone:"+91 70250 90871"}],clerks:[{name:"Joseph T.",phone:"+91 94960 55009"}]},
+    {id:"adv5",name:"Adv. Lakshmi Pillai",enrollment:"K/980/2007",mobile:"+91 90720 33456",email:"lakshmi.p.adv@gmail.com",office:"Cochin Chambers, Kaloor, Ernakulam, Kochi 682017.",juniors:[],clerks:[{name:"Manoj K.",phone:"+91 81380 22019"}]},
+    {id:"adv6",name:"Adv. Abdul Salam",enrollment:"K/1120/2008",mobile:"+91 99470 88123",email:"salam.legal@gmail.com",office:"Marvel Arcade, Ernakulam Jn, Kochi 682016.",juniors:[{name:"Adv. Rishad A.",phone:"+91 90370 66552"}],clerks:[{name:"Faisal P.",phone:"+91 85470 11098"},{name:"Ansari M.",phone:"+91 97440 22765"}]},
+    {id:"adv7",name:"Adv. Priya Varma",enrollment:"K/1675/2013",mobile:"+91 98460 99012",email:"priya.varma.adv@gmail.com",office:"Elamkulam Towers, Panampilly Nagar, Kochi 682036.",juniors:[{name:"Adv. Devika S.",phone:"+91 70340 55190"}],clerks:[{name:"Sunil R.",phone:"+91 99950 88321"}]},
+    {id:"adv8",name:"Adv. George Thomas",enrollment:"K/745/2004",mobile:"+91 94470 12378",email:"george.t.adv@gmail.com",office:"Vyttila Junction Plaza, Vyttila, Kochi 682019.",juniors:[{name:"Adv. Amal K.",phone:"+91 90480 33271"},{name:"Adv. Neha M.",phone:"+91 99610 44582"}],clerks:[{name:"Bineesh V.",phone:"+91 81290 99004"}]}
+  ];
+  DIRECTORY.forEach((a,i)=>a._i=i);
+  function renderDir(){
+    const q=document.getElementById('dirSearch').value.trim().toLowerCase();
+    const data=DIRECTORY.filter(a=>!q||a.name.toLowerCase().includes(q)||a.mobile.toLowerCase().includes(q)||a.email.toLowerCase().includes(q));
+    const grid=document.getElementById('dirGrid');
+    if(!data.length){grid.innerHTML='<div class="empty"><strong>No advocates found</strong>Try a different name, number, or email.</div>';return;}
+    grid.innerHTML=data.map((a,i)=>`<button class="dir-card" style="animation-delay:${i*0.02}s" onclick="openAdvocate('${a.id}')"><div class="dir-av sm" style="background:${avBg(a._i)}">${initials(a.name)}</div><div class="dir-info"><div class="dir-name">${a.name}</div><div class="dir-line">${ICON.phone}<span>${a.mobile}</span></div><div class="dir-line">${ICON.mail}<span>${a.email}</span></div></div>${ICON.chev}</button>`).join('');
+  }
+  function personRow(p){const t=p.phone.replace(/[^0-9+]/g,'');return `<div class="person"><div class="pav" style="background:${avBg(p.name.charCodeAt(0)+p.name.length)}">${initials(p.name)}</div><div class="pn"><b>${p.name}</b><small>${p.phone}</small></div><a class="person-call" href="tel:${t}" title="Call ${p.name}">${ICON.phone}</a></div>`;}
+  function openAdvocate(id){
+    const a=DIRECTORY.find(x=>x.id===id); if(!a)return;
+    const tel=a.mobile.replace(/[^0-9+]/g,'');
+    const peep=arr=>(arr&&arr.length)?arr.map(personRow).join(''):'<div class="empty-mini">None listed.</div>';
+    document.getElementById('dirDetail').innerHTML=`
+      <button class="back-link" onclick="dirBack()">${ICON.back}Back to directory</button>
+      <div class="adv-card">
+        <div class="adv-top">
+          <div class="dir-av lg" style="background:${avBg(a._i)}">${initials(a.name)}</div>
+          <div class="adv-top-info">
+            <h2>${a.name}</h2>
+            <div class="role">Advocate &middot; Enrolment ${a.enrollment}</div>
+            <div class="adv-actions">
+              <a class="adv-btn call" href="tel:${tel}">${ICON.phone}Call</a>
+              <a class="adv-btn email" href="mailto:${a.email}">${ICON.mail}Email</a>
+            </div>
+          </div>
+        </div>
+        <div class="adv-body">
+          <div class="adv-block"><div class="adv-block-t">${ICON.phone}Contact</div><div class="adv-addr">${ICON.phone}<span>${a.mobile}</span></div><div class="adv-addr" style="margin-top:8px">${ICON.mail}<span>${a.email}</span></div></div>
+          <div class="adv-block"><div class="adv-block-t">${ICON.pin}Office Address</div><div class="adv-addr">${ICON.pin}<span>${a.office}</span></div></div>
+          <div class="adv-block"><div class="adv-block-t">${ICON.users}Juniors</div><div class="people">${peep(a.juniors)}</div></div>
+          <div class="adv-block"><div class="adv-block-t">${ICON.user}Clerks</div><div class="people">${peep(a.clerks)}</div></div>
+        </div>
+      </div>`;
+    document.getElementById('dirList').hidden=true;
+    document.getElementById('dirDetail').hidden=false;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function dirBack(){document.getElementById('dirDetail').hidden=true;document.getElementById('dirList').hidden=false;}
+  renderDir();
+
+  renderCL(CAUSELIST);renderCases(CASES);
+</script>
+</body>
+</html>
