@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Bloom">
+<meta name="theme-color" content="#f6f3ee">
+<title>Bloom</title>
+<style>
+  :root{
+    --bg:#f6f3ee;
+    --ink:#241c16;
+    --muted:#9c8f82;
+    --card:#ffffff;
+    --accent:#c4622d;
+    --accent-soft:#f3e3d7;
+    --line:#eee6db;
+    --safe-top:env(safe-area-inset-top, 0px);
+    --safe-bottom:env(safe-area-inset-bottom, 0px);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;overflow:hidden;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    background:var(--bg);color:var(--ink);
+  }
+
+  /* full-screen app shell */
+  .screen{
+    position:fixed;inset:0;
+    width:100vw;height:100vh;height:100dvh;
+    background:var(--bg);
+    display:flex;flex-direction:column;
+    overflow:hidden;
+    max-width:480px;margin:0 auto;
+  }
+
+  .topspace{height:var(--safe-top);flex-shrink:0;background:var(--bg);}
+
+  /* pages */
+  .page{flex:1;overflow-y:auto;display:none;flex-direction:column;-webkit-overflow-scrolling:touch;}
+  .page.active{display:flex;}
+  .page::-webkit-scrollbar{display:none;}
+
+  .pad{padding:16px 22px 0;}
+  .hello{font-size:14px;color:var(--muted);}
+  .name{font-size:26px;font-weight:700;letter-spacing:-.5px;margin-top:2px;}
+
+  .search{
+    margin:18px 22px 6px;background:var(--card);border:1px solid var(--line);
+    border-radius:16px;padding:14px 16px;font-size:14px;color:var(--muted);
+    display:flex;align-items:center;gap:10px;
+  }
+
+  .chips{display:flex;gap:9px;padding:14px 22px 4px;overflow-x:auto;}
+  .chips::-webkit-scrollbar{display:none;}
+  .chip{
+    flex-shrink:0;padding:9px 17px;border-radius:20px;font-size:13px;font-weight:600;
+    background:var(--card);border:1px solid var(--line);color:var(--muted);cursor:pointer;
+  }
+  .chip.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+
+  .grid{padding:14px 22px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid.last{padding-bottom:calc(96px + var(--safe-bottom));}
+  .item{
+    background:var(--card);border-radius:22px;padding:12px;cursor:pointer;
+    border:1px solid var(--line);transition:transform .12s ease;
+  }
+  .item:active{transform:scale(.96);}
+  .thumb{
+    height:104px;border-radius:16px;margin-bottom:10px;
+    display:flex;align-items:center;justify-content:center;font-size:46px;
+    background:var(--accent-soft);
+  }
+  .item h4{font-size:14px;font-weight:600;}
+  .item .row{display:flex;justify-content:space-between;align-items:center;margin-top:6px;}
+  .price{font-size:14px;font-weight:700;color:var(--accent);}
+  .plus{
+    width:28px;height:28px;border-radius:9px;background:var(--ink);color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:18px;line-height:1;
+  }
+
+  /* detail */
+  .hero{
+    height:min(40vh,300px);background:var(--accent-soft);
+    display:flex;align-items:center;justify-content:center;font-size:110px;position:relative;flex-shrink:0;
+  }
+  .back{
+    position:absolute;top:calc(16px + var(--safe-top));left:18px;width:40px;height:40px;border-radius:12px;
+    background:rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;
+    font-size:20px;cursor:pointer;backdrop-filter:blur(4px);
+  }
+  .detail-body{padding:22px;flex:1;}
+  .detail-body h2{font-size:26px;font-weight:700;letter-spacing:-.5px;}
+  .detail-body .sub{color:var(--muted);font-size:14px;margin-top:4px;}
+  .desc{font-size:15px;line-height:1.55;color:#5e554d;margin-top:16px;}
+  .sizes{display:flex;gap:10px;margin-top:22px;}
+  .size{
+    flex:1;text-align:center;padding:13px;border-radius:14px;font-size:14px;font-weight:600;
+    border:1.5px solid var(--line);cursor:pointer;color:var(--muted);
+  }
+  .size.on{border-color:var(--accent);background:var(--accent-soft);color:var(--ink);}
+  .buybar{
+    padding:16px 22px calc(16px + var(--safe-bottom));border-top:1px solid var(--line);background:var(--bg);
+    display:flex;align-items:center;gap:14px;flex-shrink:0;
+  }
+  .qty{display:flex;align-items:center;gap:14px;}
+  .qbtn{
+    width:36px;height:36px;border-radius:11px;border:1.5px solid var(--line);
+    background:var(--card);font-size:19px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .add{
+    flex:1;background:var(--accent);color:#fff;border:none;border-radius:16px;
+    padding:16px;font-size:15px;font-weight:700;cursor:pointer;
+  }
+  .add:active{opacity:.85;}
+
+  /* cart */
+  .head{padding:18px 22px 6px;font-size:24px;font-weight:700;letter-spacing:-.5px;}
+  .cart-list{padding:8px 22px;flex:1;}
+  .crow{
+    display:flex;gap:14px;align-items:center;background:var(--card);
+    border:1px solid var(--line);border-radius:18px;padding:12px;margin-bottom:12px;
+  }
+  .crow .ic{
+    width:54px;height:54px;border-radius:13px;background:var(--accent-soft);
+    display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;
+  }
+  .crow h4{font-size:14px;font-weight:600;}
+  .crow span{font-size:13px;color:var(--muted);}
+  .crow .p{margin-left:auto;font-weight:700;color:var(--accent);}
+  .summary{padding:18px 22px calc(18px + var(--safe-bottom));border-top:1px solid var(--line);}
+  .sline{display:flex;justify-content:space-between;font-size:14px;margin-bottom:8px;color:#5e554d;}
+  .sline.total{font-size:18px;font-weight:700;color:var(--ink);margin-top:6px;}
+  .checkout{
+    width:100%;background:var(--ink);color:#fff;border:none;border-radius:16px;
+    padding:17px;font-size:15px;font-weight:700;margin-top:12px;cursor:pointer;
+  }
+  .empty{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:10px;color:var(--muted);padding:40px;text-align:center;
+  }
+  .empty .big{font-size:58px;}
+
+  /* profile */
+  .plist{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;}
+  .plist > div{padding:16px 18px;font-size:14px;border-bottom:1px solid var(--line);}
+  .plist > div:last-child{border-bottom:none;}
+
+  /* bottom nav */
+  .nav{
+    height:calc(72px + var(--safe-bottom));padding-bottom:var(--safe-bottom);
+    background:rgba(255,255,255,.92);backdrop-filter:blur(12px);
+    border-top:1px solid var(--line);
+    display:flex;justify-content:space-around;align-items:center;flex-shrink:0;
+  }
+  .tab{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    font-size:10px;color:var(--muted);cursor:pointer;font-weight:600;flex:1;position:relative;height:48px;justify-content:center;
+  }
+  .tab .gi{font-size:22px;}
+  .tab.on{color:var(--accent);}
+  .badge{
+    position:absolute;top:2px;left:50%;margin-left:6px;
+    background:var(--accent);color:#fff;font-size:9px;font-weight:700;
+    min-width:16px;height:16px;padding:0 4px;border-radius:9px;display:none;align-items:center;justify-content:center;
+  }
+  .badge.show{display:flex;}
+
+  /* toast */
+  .toast{
+    position:fixed;bottom:calc(96px + var(--safe-bottom));left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:#fff;padding:12px 22px;border-radius:22px;font-size:13px;
+    font-weight:600;opacity:0;pointer-events:none;transition:.25s;white-space:nowrap;z-index:60;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<div class="screen">
+  <div class="topspace"></div>
+
+  <!-- HOME -->
+  <div class="page active" id="home">
+    <div class="pad">
+      <div class="hello">Good morning ☕</div>
+      <div class="name">What are we brewing?</div>
+    </div>
+    <div class="search">🔍&nbsp; Search drinks, beans…</div>
+    <div class="chips">
+      <div class="chip on">All</div>
+      <div class="chip">Espresso</div>
+      <div class="chip">Cold brew</div>
+      <div class="chip">Tea</div>
+      <div class="chip">Pastry</div>
+    </div>
+    <div class="grid last" id="menu"></div>
+  </div>
+
+  <!-- DETAIL -->
+  <div class="page" id="detail">
+    <div class="hero">
+      <div class="back" onclick="show('home')">‹</div>
+      <span id="d-emoji">☕</span>
+    </div>
+    <div class="detail-body">
+      <h2 id="d-name">Flat White</h2>
+      <div class="sub" id="d-sub">Smooth · double ristretto</div>
+      <div class="desc" id="d-desc"></div>
+      <div class="sizes">
+        <div class="size" onclick="pickSize(this)">Small</div>
+        <div class="size on" onclick="pickSize(this)">Medium</div>
+        <div class="size" onclick="pickSize(this)">Large</div>
+      </div>
+    </div>
+    <div class="buybar">
+      <div class="qty">
+        <div class="qbtn" onclick="bump(-1)">−</div>
+        <span id="qty" style="font-weight:700;font-size:15px;">1</span>
+        <div class="qbtn" onclick="bump(1)">+</div>
+      </div>
+      <button class="add" onclick="addToCart()">Add to cart · <span id="d-price">$4.50</span></button>
+    </div>
+  </div>
+
+  <!-- CART -->
+  <div class="page" id="cart">
+    <div class="head">Your order</div>
+    <div class="cart-list" id="cart-list"></div>
+    <div class="empty" id="cart-empty">
+      <div class="big">🛒</div>
+      <div>Your cart is empty.<br>Add something warm.</div>
+    </div>
+    <div class="summary" id="cart-summary" style="display:none;">
+      <div class="sline"><span>Subtotal</span><span id="sub">$0.00</span></div>
+      <div class="sline"><span>Delivery</span><span>$1.50</span></div>
+      <div class="sline total"><span>Total</span><span id="tot">$0.00</span></div>
+      <button class="checkout" onclick="checkout()">Place order</button>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="page" id="profile">
+    <div class="head">Profile</div>
+    <div style="padding:8px 22px calc(20px + var(--safe-bottom));">
+      <div style="display:flex;align-items:center;gap:14px;margin:10px 0 22px;">
+        <div style="width:60px;height:60px;border-radius:50%;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:30px;">🙂</div>
+        <div>
+          <div style="font-size:18px;font-weight:700;">Alex Rivera</div>
+          <div style="font-size:13px;color:var(--muted);">Gold member · 240 pts</div>
+        </div>
+      </div>
+      <div class="plist">
+        <div>⭐ &nbsp;Rewards</div>
+        <div>📍 &nbsp;Saved addresses</div>
+        <div>💳 &nbsp;Payment methods</div>
+        <div>⚙️ &nbsp;Settings</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">Added to cart ✓</div>
+
+  <!-- NAV -->
+  <div class="nav">
+    <div class="tab on" onclick="tab('home',this)"><div class="gi">🏠</div>Home</div>
+    <div class="tab" onclick="tab('cart',this)"><div class="badge" id="badge">0</div><div class="gi">🛒</div>Cart</div>
+    <div class="tab" onclick="tab('profile',this)"><div class="gi">👤</div>Profile</div>
+  </div>
+</div>
+
+<script>
+  const DRINKS=[
+    {emoji:"☕",name:"Flat White",sub:"Smooth · double ristretto",price:4.5,desc:"Velvety steamed milk over a double shot of ristretto. Less foam, more coffee — our most ordered cup."},
+    {emoji:"🧋",name:"Iced Caramel",sub:"Cold · sweet",price:5.0,desc:"Espresso, milk and house caramel over ice. Finished with a slow caramel drizzle."},
+    {emoji:"🍵",name:"Matcha Latte",sub:"Earthy · ceremonial grade",price:5.5,desc:"Stone-ground ceremonial matcha whisked with oat milk. Grassy, smooth, lightly sweet."},
+    {emoji:"☕",name:"Cortado",sub:"Balanced · 1:1 milk",price:4.0,desc:"Equal parts espresso and warm milk. Small, strong and balanced for the purists."},
+    {emoji:"🧊",name:"Cold Brew",sub:"Bold · 18h steep",price:4.75,desc:"Steeped for eighteen hours for a smooth, low-acid, high-caffeine pour. Served black over ice."},
+    {emoji:"🥐",name:"Butter Croissant",sub:"Flaky · baked daily",price:3.5,desc:"Laminated overnight and baked each morning. Crisp shell, soft honeycomb middle."}
+  ];
+  let cart=[], current=null, qty=1, size="Medium";
+  const menu=document.getElementById('menu');
+  DRINKS.forEach((d,i)=>{
+    const el=document.createElement('div');
+    el.className='item';el.onclick=()=>openDetail(i);
+    el.innerHTML=`<div class="thumb">${d.emoji}</div><h4>${d.name}</h4>
+      <div class="row"><span class="price">$${d.price.toFixed(2)}</span><div class="plus">+</div></div>`;
+    menu.appendChild(el);
+  });
+  function show(id){
+    document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelector('.page.active').scrollTop=0;
+  }
+  function tab(id,el){
+    show(id);
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+    el.classList.add('on');
+    if(id==='cart') renderCart();
+  }
+  function openDetail(i){
+    current=i;qty=1;size="Medium";
+    const d=DRINKS[i];
+    document.getElementById('d-emoji').textContent=d.emoji;
+    document.getElementById('d-name').textContent=d.name;
+    document.getElementById('d-sub').textContent=d.sub;
+    document.getElementById('d-desc').textContent=d.desc;
+    document.getElementById('qty').textContent=1;
+    document.querySelectorAll('.size').forEach((s,k)=>s.classList.toggle('on',k===1));
+    updatePrice();show('detail');
+  }
+  function pickSize(el){
+    document.querySelectorAll('.size').forEach(s=>s.classList.remove('on'));
+    el.classList.add('on');size=el.textContent;updatePrice();
+  }
+  function bump(n){qty=Math.max(1,qty+n);document.getElementById('qty').textContent=qty;updatePrice();}
+  function updatePrice(){
+    const base=DRINKS[current].price+(size==="Large"?0.75:size==="Small"?-0.5:0);
+    document.getElementById('d-price').textContent='$'+(base*qty).toFixed(2);
+  }
+  function addToCart(){
+    const base=DRINKS[current].price+(size==="Large"?0.75:size==="Small"?-0.5:0);
+    cart.push({...DRINKS[current],size,qty,line:base*qty});
+    const b=document.getElementById('badge');
+    b.textContent=cart.reduce((s,c)=>s+c.qty,0);b.classList.add('show');
+    toast('Added to cart ✓');
+  }
+  function renderCart(){
+    const list=document.getElementById('cart-list');
+    const empty=document.getElementById('cart-empty');
+    const sum=document.getElementById('cart-summary');
+    list.innerHTML='';
+    if(cart.length===0){empty.style.display='flex';sum.style.display='none';list.style.display='none';return;}
+    empty.style.display='none';sum.style.display='block';list.style.display='block';
+    let subtotal=0;
+    cart.forEach(c=>{
+      subtotal+=c.line;
+      const r=document.createElement('div');r.className='crow';
+      r.innerHTML=`<div class="ic">${c.emoji}</div>
+        <div><h4>${c.name}</h4><span>${c.size} · qty ${c.qty}</span></div>
+        <div class="p">$${c.line.toFixed(2)}</div>`;
+      list.appendChild(r);
+    });
+    document.getElementById('sub').textContent='$'+subtotal.toFixed(2);
+    document.getElementById('tot').textContent='$'+(subtotal+1.5).toFixed(2);
+  }
+  function checkout(){
+    cart=[];document.getElementById('badge').classList.remove('show');
+    renderCart();toast('Order placed — 12 min ☕');
+  }
+  let tt;
+  function toast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg;t.classList.add('show');
+    clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('show'),1700);
+  }
+</script>
+</body>
+</html>
